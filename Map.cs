@@ -23,20 +23,20 @@ namespace RPGMap
         static int maxX; // Map Maximun
         static int maxY; // Map Maximun
 
-        struct MapC
-        {
-            public string path;
-            public string[] floorMap;
-            public char[][] mapLayout;
-        }
+       //struct MapC
+       //{
+       //    public string path;
+       //    public string[] floorMap;
+       //    public char[][] mapLayout;
+       //}
 
-        static void DisplayHUD()
+        public void DisplayHUD()
         {
             Console.SetCursorPosition(0, mapY + 1);
             //Console.WriteLine($"||Health: {playerHP}/{maxPlayerHP} | Diamonds Raided: {Diamonds} | Enemy Health: {enemyHP}/{maxEnemyHP} | Enemy 2 Health: {enemy2HP}/{maxEnemy2HP}||");
         }
 
-        static void DisplayLegend()
+        public void DisplayLegend()
         {
             Console.SetCursorPosition(0, mapY + 3);
             Console.WriteLine("| Map Legend");
@@ -70,13 +70,22 @@ namespace RPGMap
         {
             map.path = @"DataMap.txt";
             map.floorMap = File.ReadAllLines(map.path);
+
             int MapX = map.floorMap.Length;
             int MapY = map.floorMap[0].Length;
+
             map.mapLayout = new char[MapX][];
+
             for (int i = 0; i < MapX; i++)
             {
-                map.mapLayout[i] = map.floorMap[i].ToCharArray();
+                map.mapLayout[i] = new char[MapY];
+
+                for (int j = 0; j < MapY; j++)
+                {
+                    map.mapLayout[i][j] = map.floorMap[i][j];
+                }
             }
+
             DrawMap();
         }
 
@@ -93,26 +102,28 @@ namespace RPGMap
                     {
                         case '#':
                             Console.BackgroundColor = ConsoleColor.Green;
-                            Console.WriteLine(mapLayout[k][l]); break;
+                            Console.Write(mapLayout[k][l]); break;
                         case 'B':
                             Console.BackgroundColor = ConsoleColor.DarkGray;
-                            Console.WriteLine(mapLayout[k][l]); break;
+                            Console.Write(mapLayout[k][l]); break;
                         case '?':
                             Console.BackgroundColor = ConsoleColor.Magenta;
-                            Console.WriteLine(mapLayout[k][l]); break;
+                            Console.Write(mapLayout[k][l]); break;
                         case '=':
                             Console.BackgroundColor = ConsoleColor.Blue;
-                            Console.WriteLine(mapLayout[k][l]); break;
+                            Console.Write(mapLayout[k][l]); break;
                         case '^':
                             Console.BackgroundColor= ConsoleColor.DarkGray;
-                            Console.WriteLine(mapLayout[k][l]); break;
+                            Console.Write(mapLayout[k][l]); break;
+                        case '-':
+                            Console.BackgroundColor = ConsoleColor.DarkGray;
+                            Console.Write(mapLayout[k][l]); break;
+                        case 'P':
+                            Console.BackgroundColor= ConsoleColor.Red;
+                            Console.Write(mapLayout[k][l]); break;
                     }
                 }
             }
-        }
-        public char IsTileValid(int x, int y)
-        {
-            return map.mapLayout[y][x];
         }
     }
 }

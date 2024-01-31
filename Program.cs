@@ -12,11 +12,10 @@ namespace RPGMap
         static void Main(string[] args)
         {
             Map map = new Map();
+            Player player = new Player();
 
-            //map.path = map.DataMapText;
-            //map.floorMap = File.ReadAllLines(map.path);
-            //map.mapLayout = new char[map.floorMap.Length, map.floorMap[0].Length];
             map.MapTxt();
+            player.PlayerSpawn();
        
         }
     }
