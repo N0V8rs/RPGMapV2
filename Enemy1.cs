@@ -13,6 +13,7 @@ namespace RPGMap
         public int maxEnemyHP; // Health can't go pass
         public int enemyHP; // Health of the enemy
         public bool enemyAlive; // Check to see if the enemy is alive
+        public int enemyHealth;
 
         public void EnemyMovement()
         {
