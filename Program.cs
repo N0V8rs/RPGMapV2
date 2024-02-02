@@ -11,12 +11,8 @@ namespace RPGMap
     {
         static void Main(string[] args)
         {
-            Map map = new Map();
-            Player player = new Player();
-
-            map.MapTxt();
-            player.PlayerSpawn();
-       
+            Game game = new Game();
+            game.Start();
         }
     }
 }
