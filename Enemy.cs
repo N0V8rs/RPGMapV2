@@ -31,7 +31,7 @@ namespace RPGMap
 
             if (enemyAlive)
             {
-                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("B");
             }
             else

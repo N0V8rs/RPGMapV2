@@ -48,24 +48,25 @@ namespace RPGMap
                     // Drawing logic
                     char currentTile = mapLayout[i, j];
 
-                    Console.ForegroundColor = GetTileColor(currentTile);
-
                     if (currentTile == 'B')
                     {
                         // Check if the enemy is alive before drawing
                         Enemy enemy = enemies.FirstOrDefault(e => e.posX == j && e.posY == i);
                         if (enemy != null && enemy.enemyAlive)
                         {
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.Write(currentTile);
                         }
                         else
                         {
+                            Console.ForegroundColor = ConsoleColor.Gray; // Reset color for defeated enemies
                             Console.Write('-'); // Draw an empty space for defeated enemies
                         }
                     }
                     else
                     {
-                        Console.Write(currentTile);
+                        // Set color for other map tiles
+                        SetMapTileColor(currentTile);
                     }
                 }
                 Console.WriteLine();
@@ -93,23 +94,24 @@ namespace RPGMap
 
             Console.SetCursorPosition(0, 0);
         }
-        private ConsoleColor GetTileColor(char tile)
+
+        private void SetMapTileColor(char tile)
         {
+            // Set color for different map tiles
             switch (tile)
             {
                 case '#':
-                    return ConsoleColor.Cyan; // Walls
+                    Console.ForegroundColor = ConsoleColor.Cyan; // Wall color
+                    break;
                 case '-':
-                    return ConsoleColor.Gray; // Floor
-                case 'B':
-                    return ConsoleColor.Red; // Enemy
-                case '^':
-                    return ConsoleColor.DarkGray; // SpikeTrap
-                case 'X':
-                    return ConsoleColor.Magenta; // Exit
+                    Console.ForegroundColor = ConsoleColor.Gray; // Floor color
+                    break;
                 default:
-                    return ConsoleColor.White; // Default color
+                    Console.ResetColor(); // Reset color for other tiles
+                    break;
             }
+            Console.Write(tile);
+            Console.ResetColor(); // Reset color after drawing the tile
         }
         public void UpdateMapTile(int y, int x, char tile)
         {
