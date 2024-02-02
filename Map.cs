@@ -106,6 +106,7 @@ namespace RPGMap
                 case '-':
                     Console.ForegroundColor = ConsoleColor.Gray; // Floor color
                     break;
+
                 default:
                     Console.ResetColor(); // Reset color for other tiles
                     break;
