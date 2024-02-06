@@ -81,11 +81,9 @@ namespace RPGMap
         {
             Console.WriteLine("Now playing Noah Vaters RPG Map");
             Console.WriteLine("\n");
-            Console.WriteLine("Get as much Diamonds around the map and get to the exit");
             Console.WriteLine("Watch out for the enemies in the map trying to kill you");
             Console.WriteLine("\n");
             Console.WriteLine("To attack back press space near them");
-            Console.WriteLine("Best of luck to you and watch out for the camo.f.... enemies");
             Console.WriteLine("Press any key to start...");
             Console.ReadKey(true);
             Console.Clear();
