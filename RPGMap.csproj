@@ -47,6 +47,7 @@
     <Compile Include="Enemy.cs" />
     <Compile Include="Exit.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="HUD.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
@@ -57,7 +58,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TextFile1.txt" />
+    <Content Include="NorthWoods.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

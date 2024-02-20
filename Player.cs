@@ -16,18 +16,17 @@ namespace RPGMap
         public bool GameOver => gameOver;
         private bool gameOver;
 
-        public Player(int maxHP, int damage,int initialPosX, int initialPosY) : base(initialPosX, initialPosY)
+        public Player(int maxHP, int damage)
         {
             this.maxHP = maxHP;
             currentHP = maxHP;
             this.damage = damage;
-            //gameOver = false;
         }
 
         public void PlayerPosition() // Makes the player 
         {
             Console.SetCursorPosition(posX, posY);
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("+");
             Console.ResetColor();
         }
@@ -38,47 +37,7 @@ namespace RPGMap
                 YouWin = true;
             }
         }
-        public void CheckForSpikes(List<Spike> spikes)
-        {
-            foreach (Spike spike in spikes)
-            {
-                if (posX == spike.posX && posY == spike.posY)
-                {
-                    TakeDamageFromSpike();
-                    break; // If there is a spike at the player's position, no need to check further spikes
-                }
-            }
-        }
-        public void Draw(List<Spike> spikes)
-        {
-            // Draw spikes first
-            foreach (var spike in spikes)
-            {
-                spike.Draw();
-            }
 
-            // Check if the player is on a spike
-            bool onSpike = spikes.Any(spike => posX == spike.posX && posY == spike.posY);
-
-            // Draw player if not on a spike
-            if (!onSpike)
-            {
-                Console.SetCursorPosition(posX, posY);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("+");
-                Console.ResetColor();
-            }
-        }
-        private void TakeDamageFromSpike()
-        {
-            currentHP--; 
-
-            if (currentHP <= 0)
-            {
-                Console.WriteLine("Game Over - You ran out of health!");
-                gameOver = true;
-            }
-        }
         public void ReceiveDamage(int damage) // Player takes damage
         {
             currentHP -= damage;

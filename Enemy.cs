@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGMap
 {
-    internal class Enemy : Character // Character class into Enemy
+    internal class Enemy : Character
     {
         public int MaxHP;
         public int currentHP;
@@ -15,15 +15,6 @@ namespace RPGMap
         public bool enemyAlive;
         private Map map;
         private Random randomRoll = new Random();
-
-        public Enemy(int maxHP, int damage, int enemyPosX, int enemyPosY) : base(enemyPosX, enemyPosY)
-        {
-            // What's inside this class
-            this.MaxHP = maxHP; // Health
-            currentHP = maxHP;
-            this.damage = damage; // Damage
-            enemyAlive = true;
-        }
 
         public void EnemyPosition()
         {

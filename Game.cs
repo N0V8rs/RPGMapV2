@@ -9,72 +9,17 @@ namespace RPGMap
     internal class Game
     {
         private Map map;
+        private HUD hud;
         private Enemy enemy;
         private Player player;
         private Exit exit;
         private List<Enemy> enemies;
-        public List<Spike> spikes;
 
         public Game()
         {
-            map = new Map("TextFile1.txt");
-            player = new Player(10, 2, 1, 13);
+            map = new Map("NorthWoods.txt");
+            player = new Player(10, 2);
             exit = new Exit(35, 8);
-            enemies = new List<Enemy>
-            {
-                // Spawns an Enemey
-                new Enemy(3,1,2,5),
-                new Enemy(5,2,15,12),
-                new Enemy(3,1,27,3)
-            };
-            spikes = new List<Spike> // Adds spikes to the game using x and y pos
-            {
-                 new Spike(26, 7),
-                 new Spike(14, 9),
-                 new Spike(28, 7),
-                 new Spike(15, 9),
-                 new Spike(29, 7),
-                 new Spike(14, 4),
-                 new Spike(27, 7),
-                 new Spike(15, 4),
-                 new Spike(13, 4),
-            };
-        }
-
-        public void DisplayLegend()
-        {
-            Console.SetCursorPosition(0, map.maxY + 4);
-            Console.WriteLine("| Map Legend");
-            Console.SetCursorPosition(0, map.maxY + 5);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("| Player = + ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write(" Enemy = B ");
-            Console.WriteLine("\n");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("| Walls = # |");
-            Console.WriteLine("\n");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write("| Floor = - |");
-            Console.WriteLine("\n");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write(" SpikeTrap = ^ ");
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(" Exit = X |");
-            Console.ResetColor();
-            Console.WriteLine();
-        }
-        public void DisplayHUD(Player player, List<Enemy> enemies, Map map)
-        {
-
-            Console.SetCursorPosition(0, map.maxY + 1);
-            Console.WriteLine($"|| Health: {player.currentHP}/{player.maxHP}||");
-
-            foreach (var enemy in enemies)
-            {
-                Console.Write($"|| Enemy Health: {enemy.currentHP}/{enemy.MaxHP} ||");
-            }
-            DisplayLegend();
         }
 
         public void Start()
@@ -90,12 +35,11 @@ namespace RPGMap
 
             while (!player.GameOver && !player.YouWin)
             {
-                // Clear the console at the beginning of each frame
                 Console.Clear();
 
                 // Draw the map, HUD, and other elements
-                map.DrawMap(player, enemies, spikes, exit);
-                DisplayHUD(player, enemies, map);
+                map.DrawMap(player, exit);
+                hud.DisplayHUD(player, map);
 
                 // Handle player input
                 player.PlayerInput(map, enemies, exit);
@@ -109,32 +53,9 @@ namespace RPGMap
                 {
                     Console.Clear();
                     Console.WriteLine("Game Over!");
-                    // Display other game over messages or options...
                     Console.ReadKey(true);
                 }
 
-                // Update and draw enemies
-                foreach (var enemy in enemies.ToList())
-                {
-                    enemy.Move(map, player);
-                    enemy.Attack(player);
-                    //player.CheckForSpikes(spikes);
-                    //player.Draw(spikes);
-
-                    if (!enemy.enemyAlive)
-                    {
-                        enemies.Remove(enemy);
-                        //map.mapLayout(enemy.PosX, enemy.PosY, '-');
-                    }
-                    else
-                    {
-                        enemy.EnemyPosition();
-                    }
-                }
-                player.CheckForSpikes(spikes);
-                player.Draw(spikes);
-
-                // Check if the player is still alive
                 if (player.currentHP > 0)
                 {
                     player.PlayerPosition();

@@ -14,6 +14,7 @@ namespace RPGMap
         public char[,] mapLayout;
         public int maxX;
         public int maxY;
+        Enemy enemy;
 
         public Map(string filepath)
         {
@@ -37,31 +38,21 @@ namespace RPGMap
             }
         }
 
-        public void DrawMap(Player player, List<Enemy> enemies, List<Spike> spikes, Exit exit)
+        public void DrawMap(Player player, Exit exit)
         {
-            Console.Clear();
-
             for (int i = 0; i < maxY; i++)
             {
                 for (int j = 0; j < maxX; j++)
                 {
-                    // Drawing logic
                     char currentTile = mapLayout[i, j];
 
                     if (currentTile == 'B')
                     {
-                        // Check if the enemy is alive before drawing
-                        Enemy enemy = enemies.FirstOrDefault(e => e.posX == j && e.posY == i);
-                        if (enemy != null && enemy.enemyAlive)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write(currentTile);
-                        }
-                        else
-                        {
-                            Console.ForegroundColor = ConsoleColor.Gray; // Reset color for defeated enemies
-                            Console.Write('-'); // Draw an empty space for defeated enemies
-                        }
+                        enemy.posX = i;
+                        enemy.posY = j;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("B"); // Draw the enemy
+                        Console.ResetColor();
                     }
                     else
                     {
@@ -73,19 +64,6 @@ namespace RPGMap
             }
 
             player.PlayerPosition();
-            foreach (var enemy in enemies)
-            {
-                // Draw enemies only if they are alive
-                if (enemy.enemyAlive)
-                {
-                    enemy.EnemyPosition();
-                }
-            }
-
-            foreach (var spike in spikes)
-            {
-                spike.Draw();
-            }
 
             Console.SetCursorPosition(exit.ExitX, exit.ExitY);
             Console.ForegroundColor = ConsoleColor.Magenta;
@@ -101,11 +79,12 @@ namespace RPGMap
             switch (tile)
             {
                 case '#':
-                    Console.ForegroundColor = ConsoleColor.Cyan; // Wall color
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; // Wall color
                     break;
                 case '-':
                     Console.ForegroundColor = ConsoleColor.Gray; // Floor color
                     break;
+                case '^': Console.ForegroundColor = ConsoleColor.DarkRed; break;
 
                 default:
                     Console.ResetColor(); // Reset color for other tiles

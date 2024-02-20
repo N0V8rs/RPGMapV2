@@ -11,10 +11,10 @@ namespace RPGMap
         public int posX; // Character and enemy position
         public int posY; // CHaracter and enemy position
 
-        public Character(int startX, int startY) // Character CLass : into Player and Enemy
-        {
-            posX = startX; 
-            posY = startY;
-        }
+      //public Character(int startX, int startY) // Character CLass : into Player and Enemy
+      //{
+      //    posX = startX; 
+      //    posY = startY;
+      //}
     }
 }
