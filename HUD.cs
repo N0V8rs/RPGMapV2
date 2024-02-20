@@ -9,11 +9,12 @@ namespace RPGMap
     internal class HUD
     {
         Map map;
+        Player player;
         public void DisplayLegend()
         {
-            Console.SetCursorPosition(0, map.maxY + 4);
-            Console.WriteLine("| Map Legend");
+            //Console.SetCursorPosition(0, map.maxY + 4);
             Console.SetCursorPosition(0, map.maxY + 5);
+            Console.WriteLine("| Map Legend");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("| Player = + ");
             Console.ForegroundColor = ConsoleColor.Red;
@@ -33,10 +34,10 @@ namespace RPGMap
             Console.WriteLine();
         }
 
-        public void DisplayHUD(Player player, Map map)
+        public void DisplayHUD()
         {
 
-            Console.SetCursorPosition(0, map.maxY + 1);
+            Console.SetCursorPosition(0, map.maxY + 2);
             Console.WriteLine($"|| Health: {player.currentHP}/{player.maxHP}||");
             DisplayLegend();
         }

@@ -15,6 +15,8 @@ namespace RPGMap
         public int maxX;
         public int maxY;
         Enemy enemy;
+        Player player;
+        HUD hud;
 
         public Map(string filepath)
         {
@@ -25,7 +27,7 @@ namespace RPGMap
             CreateMap();
         }
 
-        private void CreateMap() // Create the arrays
+        private void CreateMap()
         {
             mapLayout = new char[maxY, maxX];
 
@@ -34,43 +36,45 @@ namespace RPGMap
                 for (int j = 0; j < maxX; j++)
                 {
                     mapLayout[i, j] = floorMap[i][j];
+
+                    if (mapLayout[i,j] == '+')
+                    {
+                        player.posX = i;
+                        player.posY = j;
+                    }
+                    if (mapLayout[i,j] == 'E')
+                    {
+                        enemy.posX = j;
+                        enemy.posY = i;
+                    }
                 }
             }
         }
 
-        public void DrawMap(Player player, Exit exit)
+        public void DrawMap(Player player, Enemy enemy)
         {
-            for (int i = 0; i < maxY; i++)
+            for (int l = 0; l < maxY; l++)
             {
-                for (int j = 0; j < maxX; j++)
+                for (int k = 0; k < maxX; k++)
                 {
-                    char currentTile = mapLayout[i, j];
+                    char currentTile = mapLayout[l,k];
 
-                    if (currentTile == 'B')
+                    if (currentTile == '=' && !player.YouWin)
                     {
-                        enemy.posX = i;
-                        enemy.posY = j;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("B"); // Draw the enemy
-                        Console.ResetColor();
+                        player.posX = l; player.posY = k;
+                        player.YouWin = true;
+                        mapLayout[k,l] = '#';
                     }
-                    else
+                    if (currentTile == '*' && !player.YouWin)
                     {
-                        // Set color for other map tiles
-                        SetMapTileColor(currentTile);
+                        enemy.posX = l; enemy.posY = k;
                     }
+                    Console.Write(currentTile);
                 }
                 Console.WriteLine();
             }
-
-            player.PlayerPosition();
-
-            Console.SetCursorPosition(exit.ExitX, exit.ExitY);
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write("X");
-            Console.ResetColor();
-
             Console.SetCursorPosition(0, 0);
+            //hud.DisplayHUD();
         }
 
         private void SetMapTileColor(char tile)
@@ -84,8 +88,9 @@ namespace RPGMap
                 case '-':
                     Console.ForegroundColor = ConsoleColor.Gray; // Floor color
                     break;
-                case '^': Console.ForegroundColor = ConsoleColor.DarkRed; break;
-
+                case '^': 
+                    Console.ForegroundColor = ConsoleColor.DarkRed; // Spikes color
+                    break;
                 default:
                     Console.ResetColor(); // Reset color for other tiles
                     break;

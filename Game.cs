@@ -36,13 +36,11 @@ namespace RPGMap
             while (!player.GameOver && !player.YouWin)
             {
                 Console.Clear();
-
-                // Draw the map, HUD, and other elements
-                map.DrawMap(player, exit);
-                hud.DisplayHUD(player, map);
+                map.DrawMap(player,enemy);
+                //hud.DisplayHUD();
 
                 // Handle player input
-                player.PlayerInput(map, enemies, exit);
+                player.PlayerInput(map, exit);
 
                 if (exit.IsPlayerOnExit(player))
                 {
@@ -58,7 +56,7 @@ namespace RPGMap
 
                 if (player.currentHP > 0)
                 {
-                    player.PlayerPosition();
+
                 }
             }
 

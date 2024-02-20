@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMap
 {
@@ -12,9 +7,10 @@ namespace RPGMap
         public int maxHP;
         public int currentHP;
         private int damage;
-        internal bool YouWin {  get; set; }
+        public bool YouWin { get; set; }
         public bool GameOver => gameOver;
         private bool gameOver;
+        Enemy enemy;
 
         public Player(int maxHP, int damage)
         {
@@ -23,13 +19,6 @@ namespace RPGMap
             this.damage = damage;
         }
 
-        public void PlayerPosition() // Makes the player 
-        {
-            Console.SetCursorPosition(posX, posY);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("+");
-            Console.ResetColor();
-        }
         public void CheckForWin(Map map, Exit exit)
         {
             if (map.mapLayout[posY, posX] == 'X')
@@ -45,20 +34,19 @@ namespace RPGMap
             if (currentHP <= 0)
             {
                 currentHP = 0;
-                gameOver = true; 
+                gameOver = true;
             }
         }
-        public void AttackEnemy(List<Enemy> enemies)
+
+        public void AttackEnemy()
         {
-            foreach (var enemy in enemies)
+            if (Math.Abs(posX - enemy.posX) <= 1 && Math.Abs(posY - enemy.posY) <= 1)
             {
-                if (Math.Abs(posX - enemy.posX) <= 1 && Math.Abs(posY - enemy.posY) <= 1)
-                {
-                    enemy.ReceiveDamage(damage);
-                }
+                enemy.ReceiveDamage(damage);
             }
         }
-        public void PlayerInput(Map map, List<Enemy> enemies, Exit exit) // Moves the player 
+
+        public void PlayerInput(Map map, Exit exit) // Moves the player 
         {
             bool moved = false; // Checks for the moved
 
@@ -69,7 +57,7 @@ namespace RPGMap
 
             if (playerMovement.Key == ConsoleKey.Spacebar) // Attack the enemy
             {
-                AttackEnemy(enemies);
+                AttackEnemy();
                 moved = true;
             }
 
@@ -112,3 +100,4 @@ namespace RPGMap
         }
     }
 }
+

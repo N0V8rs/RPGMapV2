@@ -15,7 +15,17 @@ namespace RPGMap
         public bool enemyAlive;
         private Map map;
         private Random randomRoll = new Random();
+        public int PosX { get; set; }
+        public int PosY { get; set; }
 
+        public Enemy(int posX, int posY)
+        {
+            PosX = posX;
+            PosY = posY;
+            currentHP = 10;
+            MaxHP = 10;
+        }
+    
         public void EnemyPosition()
         {
             Console.SetCursorPosition(posX, posY);
@@ -27,7 +37,7 @@ namespace RPGMap
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Gray; // Reset color for defeated enemies
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("-");
             }
 
