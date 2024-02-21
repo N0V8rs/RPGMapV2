@@ -20,7 +20,7 @@ namespace RPGMap
         public Game()
         {
             map = new Map("NorthWoods.txt");
-            player = new Player(10, 10, 2, player.posX, player.posY);
+            player = new Player(10, 10, 2, 0, 0);
             exit = new Exit(35, 8);
         }
 
@@ -38,10 +38,9 @@ namespace RPGMap
             while (!player.GameOver && !player.YouWin)
             {
                 Console.Clear();
-                map.DrawMap(player,enemy);
+                map.DrawMap(player, enemy);
                 //hud.DisplayHUD();
 
-                // Handle player input
                 player.PlayerInput(map, exit);
 
                 if (exit.IsPlayerOnExit(player))

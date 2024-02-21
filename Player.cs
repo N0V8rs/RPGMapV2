@@ -15,8 +15,6 @@ namespace RPGMap
         public  bool gameOver;
         Enemy enemy;
 
-
-
         public Player(int maxPlayerHP, int playerHP, int damage, int startPosX, int startPosY)
         {
             maxHP = maxPlayerHP;

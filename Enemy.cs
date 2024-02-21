@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGMap
 {
-    internal class Enemy : Character
+    internal class Enemy
     {
         public int MaxHP;
         public int currentHP;
@@ -15,17 +15,25 @@ namespace RPGMap
         public bool enemyAlive;
         private Map map;
         private Random randomRoll = new Random();
-        public int PosX { get; set; }
-        public int PosY { get; set; }
+        public int posX { get; set; }
+        public int posY { get; set; }
 
         public Enemy(int enemyMaxHP, int enemyHP, int enemyPosX, int enemyPosY)
         {
-            PosX = enemyPosX;
-            PosY = enemyPosY;
+            posX = enemyPosX;
+            posY = enemyPosY;
             MaxHP = enemyMaxHP;
             currentHP = enemyHP;
         }
-    
+
+        public void DrawEnemy()
+        {
+            Console.SetCursorPosition(posX, posY);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("B");
+            Console.ResetColor();
+        }
+
         public void EnemyPosition()
         {
             Console.SetCursorPosition(posX, posY);

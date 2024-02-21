@@ -12,11 +12,13 @@ namespace RPGMap
         private string path;
         private string[] floorMap;
         public char[,] mapLayout;
-        public int maxX;
-        public int maxY;
-        Enemy Enemy;
-        Player Player;
-        HUD Hud;
+        public int maxX {  get; set; }
+        public int maxY {  get; set; }
+        public int playerPosX { get; set; }
+        public int playerPosY { get; set; }
+        public int enemy1PosX { get; set; }
+        public int enemy1PosY { get; set; }
+
 
         public Map(string filepath)
         {
@@ -37,15 +39,16 @@ namespace RPGMap
                 {
                     mapLayout[i, j] = floorMap[i][j];
 
-                    if (mapLayout[i,j] == '+')
+                    if (mapLayout[i, j] == '+')
                     {
-                        Player.posX = i;
-                        Player.posY = j;
+                        playerPosX = j;
+                        playerPosY = i;
                     }
-                    if (mapLayout[i,j] == 'E')
+                    else if (mapLayout[i, j] == 'E')
                     {
-                        Enemy.posX = j;
-                        Enemy.posY = i;
+                        enemy1PosX = j;
+                        enemy1PosY = i;
+                        
                     }
                 }
             }
@@ -53,54 +56,33 @@ namespace RPGMap
 
         public void DrawMap(Player player, Enemy enemy)
         {
-            for (int l = 0; l < maxY; l++)
+            for (int k = 0; k < maxY; k++)
             {
-                for (int k = 0; k < maxX; k++)
+                for (int l = 0; l < maxX; l++)
                 {
-                    char currentTile = mapLayout[l,k];
+                    char currentTile = mapLayout[k, l];
 
                     if (currentTile == '=' && !player.YouWin)
                     {
-                        player.posX = l; player.posY = k;
+                        player.posX = l;
+                        player.posY = k - 1;
                         player.YouWin = true;
-                        mapLayout[k,l] = '#';
+                        mapLayout[k, l] = '#';
                     }
-                    if (currentTile == '*' && !player.YouWin)
+                    else if (currentTile == 'X' && !player.YouWin)
                     {
-                        enemy.posX = l; enemy.posY = k;
+                        enemy.posX = l;
+                        enemy.posY = k;
                     }
                     Console.Write(currentTile);
                 }
                 Console.WriteLine();
             }
+            player.DrawPlayer();
+            enemy.DrawEnemy();
             Console.SetCursorPosition(0, 0);
-            //hud.DisplayHUD();
-        }
-
-        private void SetMapTileColor(char tile)
-        {
-            // Set color for different map tiles
-            switch (tile)
-            {
-                case '#':
-                    Console.ForegroundColor = ConsoleColor.DarkGreen; // Wall color
-                    break;
-                case '-':
-                    Console.ForegroundColor = ConsoleColor.Gray; // Floor color
-                    break;
-                case '^': 
-                    Console.ForegroundColor = ConsoleColor.DarkRed; // Spikes color
-                    break;
-                default:
-                    Console.ResetColor(); // Reset color for other tiles
-                    break;
-            }
-            Console.Write(tile);
-            Console.ResetColor(); // Reset color after drawing the tile
-        }
-        public void UpdateMapTile(int y, int x, char tile)
-        {
-            mapLayout[y, x] = tile;
+            // hud.DisplayHUD();
         }
     }
 }
+
