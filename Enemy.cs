@@ -18,12 +18,12 @@ namespace RPGMap
         public int PosX { get; set; }
         public int PosY { get; set; }
 
-        public Enemy(int posX, int posY)
+        public Enemy(int enemyMaxHP, int enemyHP, int enemyPosX, int enemyPosY)
         {
-            PosX = posX;
-            PosY = posY;
-            currentHP = 10;
-            MaxHP = 10;
+            PosX = enemyPosX;
+            PosY = enemyPosY;
+            MaxHP = enemyMaxHP;
+            currentHP = enemyHP;
         }
     
         public void EnemyPosition()

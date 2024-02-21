@@ -1,22 +1,29 @@
 ﻿using System;
+using static RPGMap.Character;
 
 namespace RPGMap
 {
-    internal class Player : Character
+    internal class Player
     {
-        public int maxHP;
-        public int currentHP;
-        private int damage;
+        public int maxHP {  get; set; }
+        public int currentHP {  get; set; }
+        public int playerDamage {  get; set; }
+        public int posX {  get; set; }
+        public int posY { get; set; }
         public bool YouWin { get; set; }
         public bool GameOver => gameOver;
-        private bool gameOver;
+        public  bool gameOver;
         Enemy enemy;
 
-        public Player(int maxHP, int damage)
+
+
+        public Player(int maxPlayerHP, int playerHP, int damage, int startPosX, int startPosY)
         {
-            this.maxHP = maxHP;
-            currentHP = maxHP;
-            this.damage = damage;
+            maxHP = maxPlayerHP;
+            currentHP = playerHP;
+            playerDamage = damage;
+            posX = startPosX;
+            posY = startPosY;
         }
 
         public void CheckForWin(Map map, Exit exit)
@@ -42,7 +49,7 @@ namespace RPGMap
         {
             if (Math.Abs(posX - enemy.posX) <= 1 && Math.Abs(posY - enemy.posY) <= 1)
             {
-                enemy.ReceiveDamage(damage);
+                enemy.ReceiveDamage(playerDamage);
             }
         }
 
@@ -97,6 +104,14 @@ namespace RPGMap
                     Environment.Exit(1);
                 }
             }
+        }
+
+        public void DrawPlayer()
+        {
+            Console.SetCursorPosition(posX, posY);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("+");
+            Console.ResetColor();
         }
     }
 }

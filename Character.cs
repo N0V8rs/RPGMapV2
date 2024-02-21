@@ -8,13 +8,21 @@ namespace RPGMap
 {
     internal class Character
     {
-        public int posX; // Character and enemy position
-        public int posY; // CHaracter and enemy position
+        public int entityMaxHealth { get; set; }
+        public int entityHealth { get; set; }
+        public int entityDamage { get; set; }
+        public int positionX { get; set; }
+        public int positionY { get; set; }
+        public bool IsAlive { get; set; }
 
-      //public Character(int startX, int startY) // Character CLass : into Player and Enemy
-      //{
-      //    posX = startX; 
-      //    posY = startY;
-      //}
+        public Character(int maxHealth, int health, int damage, int startX, int startY)
+        {
+            entityMaxHealth = maxHealth;
+            entityHealth = health;
+            entityDamage = damage;
+            positionX = startX;
+            positionY = startY;
+            IsAlive = true;
+        }
     }
 }

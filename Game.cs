@@ -14,11 +14,13 @@ namespace RPGMap
         private Player player;
         private Exit exit;
         private List<Enemy> enemies;
+        public int posX {  get; set; }
+        public int posY { get; set; }
 
         public Game()
         {
             map = new Map("NorthWoods.txt");
-            player = new Player(10, 2);
+            player = new Player(10, 10, 2, player.posX, player.posY);
             exit = new Exit(35, 8);
         }
 

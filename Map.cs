@@ -14,9 +14,9 @@ namespace RPGMap
         public char[,] mapLayout;
         public int maxX;
         public int maxY;
-        Enemy enemy;
-        Player player;
-        HUD hud;
+        Enemy Enemy;
+        Player Player;
+        HUD Hud;
 
         public Map(string filepath)
         {
@@ -39,13 +39,13 @@ namespace RPGMap
 
                     if (mapLayout[i,j] == '+')
                     {
-                        player.posX = i;
-                        player.posY = j;
+                        Player.posX = i;
+                        Player.posY = j;
                     }
                     if (mapLayout[i,j] == 'E')
                     {
-                        enemy.posX = j;
-                        enemy.posY = i;
+                        Enemy.posX = j;
+                        Enemy.posY = i;
                     }
                 }
             }
