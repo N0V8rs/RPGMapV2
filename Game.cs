@@ -52,6 +52,7 @@ internal class GameManager
 
             EnemyAction();
             bomb.AttackEveryTwoMoves(player);
+            HUD.UpdateTimeBeforeNextAttack(bomb.movesSinceLastAttack);
             boss.MoveTowardsPlayer(player, map.layout);
         }
 

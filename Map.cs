@@ -79,7 +79,7 @@ namespace FirstPlayable
                 for (int l = 0; l < mapWidth; l++)
                 {
                     char tile = layout[k, l];
-                    Console.BackgroundColor = ConsoleColor.White;
+                    
                     switch (tile)
                     {
                         case '=':

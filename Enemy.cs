@@ -183,7 +183,7 @@ namespace FirstPlayable
         {
             movesSinceLastAttack++;
 
-            if (movesSinceLastAttack == 2 && enemyAlive)
+            if (movesSinceLastAttack >= 3 && enemyAlive)
             {
                 player.HPManager.Damage(enemyDamage);
 
@@ -199,19 +199,15 @@ namespace FirstPlayable
 
         public void AttackPlayer(Player player)
         {
-            // Calculate the distance between the enemy and the player along both axes
             int distanceX = Math.Abs(positionX - player.positionX);
             int distanceY = Math.Abs(positionY - player.positionY);
 
-            // Check if the enemy and the player are aligned either horizontally or vertically
             if ((distanceX == 0 && distanceY <= 1) || (distanceY == 0 && distanceX <= 1))
             {
                 player.HPManager.Damage(enemyDamage); 
 
-                // Check if the player is defeated
                 if (player.HPManager.IsDead())
                 {
-                    Console.WriteLine("Player has been defeated by an enemy!");
                     player.gameOver = true;
                 }
             }
