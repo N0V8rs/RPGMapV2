@@ -50,7 +50,7 @@ internal class GameManager
 
             EnemyAction();
             bomb.AttackEveryTwoMoves(player);
-            boss.MoveTowardsPlayer(player.positionX, player.positionY, map.layout);
+            boss.MoveTowardsPlayer(player, map.layout);
         }
 
         Console.Clear();

@@ -107,57 +107,60 @@ namespace FirstPlayable
             positionX = enemyMovementX;
         }
 
-        public void MoveTowardsPlayer(int playerPosX, int playerPosY, char[,] mapLayout)
+        public void MoveTowardsPlayer(Player player, char[,] mapLayout)
         {
             if (enemyAlive)
             {
-                int playerDistanceX = Math.Abs(playerPosX - positionX);
-                int playerDistanceY = Math.Abs(playerPosY - positionY);
+                int playerDistanceX = Math.Abs(player.positionX - positionX);
+                int playerDistanceY = Math.Abs(player.positionY - positionY);
                 int enemyMovementX = positionX;
                 int enemyMovementY = positionY;
-                int newEnemyPositionX = enemyMovementX;
-                int newEnemyPositionY = enemyMovementY;
 
-                // Checks to see if the player is near
-                if (playerDistanceX <= 2 && playerDistanceY <= 2)
+                // Check if the player is near
+                if (playerDistanceX <= 1 && playerDistanceY <= 1)
+                {
+                    // Attack the player
+                    player.HPManager.Damage(enemyDamage);
+
+                    // Check if the player is defeated
+                    if (player.HPManager.IsDead())
+                    {
+                        player.gameOver = true;
+                    }
+                }
+                else if (playerDistanceX <= 2 && playerDistanceY <= 2)
                 {
                     // Moves towards the player
-                    if (playerPosX < positionX && mapLayout[positionY, positionX - 1] != '#')
+                    if (player.positionX < positionX && mapLayout[positionY, positionX - 1] != '#')
                     {
                         enemyMovementX--;
                     }
-                    else if (playerPosX > positionX && mapLayout[positionY, positionX + 1] != '#')
+                    else if (player.positionX > positionX && mapLayout[positionY, positionX + 1] != '#')
                     {
                         enemyMovementX++;
                     }
 
-                    if (playerPosY < positionY && mapLayout[positionY - 1, positionX] != '#')
+                    if (player.positionY < positionY && mapLayout[positionY - 1, positionX] != '#')
                     {
                         enemyMovementY--;
                     }
-                    else if (playerPosY > positionY && mapLayout[positionY + 1, positionX] != '#')
+                    else if (player.positionY > positionY && mapLayout[positionY + 1, positionX] != '#')
                     {
                         enemyMovementY++;
                     }
                 }
 
-                if ((enemyMovementX != playerPosX || enemyMovementY != playerPosY) &&
-                    mapLayout[enemyMovementY, enemyMovementX] != '#')
+                // Update enemy position
+                if (mapLayout[enemyMovementY, enemyMovementX] != '#')
                 {
-                   
-                    mapLayout[newEnemyPositionY, newEnemyPositionX] = '-';
-                  
-                    if (enemyAlive)
-                    {
-                        mapLayout[enemyMovementY, enemyMovementX] = '-';
-                        positionX = enemyMovementX;
-                        positionY = enemyMovementY;
-                        newEnemyPositionX = positionX;
-                        newEnemyPositionY = positionY;
-                    }
+                    mapLayout[positionY, positionX] = '-';
+                    positionX = enemyMovementX;
+                    positionY = enemyMovementY;
+                    mapLayout[positionY, positionX] = '-'; // Update the map with the enemy's new position
                 }
             }
         }
+
         public void EnemyMovement(Player player, char[,] mapLayout)
         {
             int distanceX = Math.Abs(positionX - player.positionX);
@@ -171,7 +174,7 @@ namespace FirstPlayable
                 }
                 else
                 {
-                    MoveTowardsPlayer(player.positionX, player.positionY, mapLayout);
+                    MoveTowardsPlayer(player, mapLayout);
                 }
             }
         }
