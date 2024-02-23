@@ -97,7 +97,7 @@ namespace FirstPlayable
                         case '^':
                             Console.ForegroundColor = ConsoleColor.Red; break;
                         case 'X':
-                            Console.ForegroundColor= ConsoleColor.Black; break;
+                            Console.ForegroundColor= ConsoleColor.Blue; break;
                     }
 
                     if (tile == '#' && !player.levelComplete)

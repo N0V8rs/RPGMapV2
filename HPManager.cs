@@ -26,7 +26,6 @@ namespace RPGMap
             return maxHP;
         }
 
-        // Modify Health
         public void Damage(int amount)
         {
             currentHP -= amount;

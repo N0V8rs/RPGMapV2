@@ -17,6 +17,7 @@ namespace FirstPlayable
         public int positionX { get; set; }
         public int positionY { get; set; }
         public bool enemyAlive { get; set; }
+
         public int movesSinceLastAttack;
 
         public Enemy(int maxHealth, int damage, int startX, int startY)
@@ -102,7 +103,6 @@ namespace FirstPlayable
                 }
             }
 
-            // Update enemy position
             positionY = enemyMovementY;
             positionX = enemyMovementX;
         }
@@ -116,13 +116,10 @@ namespace FirstPlayable
                 int enemyMovementX = positionX;
                 int enemyMovementY = positionY;
 
-                // Check if the player is near
                 if (playerDistanceX <= 1 && playerDistanceY <= 1)
                 {
-                    // Attack the player
                     player.HPManager.Damage(enemyDamage);
 
-                    // Check if the player is defeated
                     if (player.HPManager.IsDead())
                     {
                         player.gameOver = true;
@@ -130,36 +127,28 @@ namespace FirstPlayable
                 }
                 else if (playerDistanceX <= 2 && playerDistanceY <= 2)
                 {
-                    // Moves towards the player
-                    if (player.positionX < positionX && mapLayout[positionY, positionX - 1] != '#')
+                    int deltaX = Math.Sign(player.positionX - positionX);
+                    int deltaY = Math.Sign(player.positionY - positionY);
+
+                    enemyMovementX = positionX + deltaX;
+                    enemyMovementY = positionY + deltaY;
+
+                    if (mapLayout[enemyMovementY, enemyMovementX] == '^')
                     {
-                        enemyMovementX--;
-                    }
-                    else if (player.positionX > positionX && mapLayout[positionY, positionX + 1] != '#')
-                    {
-                        enemyMovementX++;
+                        return;
                     }
 
-                    if (player.positionY < positionY && mapLayout[positionY - 1, positionX] != '#')
+                    if (mapLayout[enemyMovementY, enemyMovementX] != '#')
                     {
-                        enemyMovementY--;
+                        mapLayout[positionY, positionX] = '-';
+                        positionX = enemyMovementX;
+                        positionY = enemyMovementY;
+                        mapLayout[positionY, positionX] = '-';
                     }
-                    else if (player.positionY > positionY && mapLayout[positionY + 1, positionX] != '#')
-                    {
-                        enemyMovementY++;
-                    }
-                }
-
-                // Update enemy position
-                if (mapLayout[enemyMovementY, enemyMovementX] != '#')
-                {
-                    mapLayout[positionY, positionX] = '-';
-                    positionX = enemyMovementX;
-                    positionY = enemyMovementY;
-                    mapLayout[positionY, positionX] = '-'; // Update the map with the enemy's new position
                 }
             }
         }
+
 
         public void EnemyMovement(Player player, char[,] mapLayout)
         {
@@ -179,17 +168,31 @@ namespace FirstPlayable
             }
         }
 
-        public void AttackEveryTwoMoves(Player player)
+        public void AttackEveryTwoMoves(Player player, char[,] mapLayout)
         {
             movesSinceLastAttack++;
 
             if (movesSinceLastAttack >= 3 && enemyAlive)
             {
-                player.HPManager.Damage(enemyDamage);
+                    player.HPManager.Damage(enemyDamage);
 
-                if (player.HPManager.IsDead())
+                    if (player.HPManager.IsDead())
+                    {
+                        player.gameOver = true;
+                    }
+                int playerDirectionX = Math.Sign(player.positionX - positionX);
+                int playerDirectionY = Math.Sign(player.positionY - positionY);
+
+                int moveX = -playerDirectionX;
+                int moveY = -playerDirectionY;
+
+                if (mapLayout[positionY + moveY, positionX + moveX] != '#')
                 {
-                    player.gameOver = true;
+                    mapLayout[positionY, positionX] = '-';
+                    positionX += moveX;
+                    positionY += moveY;
+                    mapLayout[positionY, positionX] = '-';
+
                 }
 
                 movesSinceLastAttack = 0;

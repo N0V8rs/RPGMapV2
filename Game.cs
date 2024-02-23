@@ -34,7 +34,7 @@ internal class GameManager
         Console.WriteLine("You can attack by either running into the enemy.");
         Console.WriteLine("enemy have different attacks so watch out.");
         Console.WriteLine("E enemies attacks randomly when you next to them.");
-        Console.WriteLine("0 is a bomb ticks down when near the player until it explosions.");
+        Console.WriteLine("W is a sniper that deals damage you with infinite range.");
         Console.WriteLine("B is a massive enemy only can move or attack that takes a while to damage the Player.");
         Console.WriteLine("");
         Console.WriteLine("Good luck on your advanture Hunter");
@@ -51,7 +51,7 @@ internal class GameManager
             PlayerInput();
 
             EnemyAction();
-            bomb.AttackEveryTwoMoves(player);
+            bomb.AttackEveryTwoMoves(player,map.layout);
             HUD.UpdateTimeBeforeNextAttack(bomb.movesSinceLastAttack);
             boss.MoveTowardsPlayer(player, map.layout);
         }
