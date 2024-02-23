@@ -130,14 +130,12 @@ namespace FirstPlayable
                 }
             }
 
-            // exit game
             if (playerController.Key == ConsoleKey.Escape)
             {
                 Environment.Exit(1);
             }
         }
 
-        // handles things like collision checks and what the player is moving towards
         private void HandleMovement(Map map, Enemy enemy, Enemy boss, Enemy bomb, ref bool moved, ref int newPlayerPositionX, ref int newPlayerPositionY, int movementX, int movementY)
         {
             if (moved == false && map.layout[movementY, movementX] != '#')
@@ -223,24 +221,24 @@ namespace FirstPlayable
                 }
             }
         }
-        private void AttackBoss(Enemy boss)
-        {
-            if (Math.Abs(positionX - boss.positionX) <= 1 && Math.Abs(positionY - boss.positionY) <= 1)
-            {
-                boss.HPManager.Damage(playerDamage);
-                if (boss.HPManager.IsDead())
-                {
-                    boss.positionX = 0;
-                    boss.positionY = 0;
-                    boss.enemyAlive = false;
-                }
-            }
-        }
+        //private void AttackBoss(Enemy boss)
+        //{
+        //    if (Math.Abs(positionX - boss.positionX) <= 1 && Math.Abs(positionY - boss.positionY) <= 1)
+        //    {
+        //        boss.HPManager.Damage(playerDamage);
+        //        if (boss.HPManager.IsDead())
+        //        {
+        //            boss.positionX = 0;
+        //            boss.positionY = 0;
+        //            boss.enemyAlive = false;
+        //        }
+        //    }
+        //}
 
         public void DrawPlayer()
         {
             Console.SetCursorPosition(positionX, positionY);
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.Write("!");
             Console.ResetColor();
         }

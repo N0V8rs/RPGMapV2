@@ -5,6 +5,8 @@ using System;
 internal class GameManager
 {
     private Map map;
+    private ItemPickup healUP;
+    private ItemPickup powerUP;
     private Player player;
     private Enemy enemy;
     private Enemy boss;

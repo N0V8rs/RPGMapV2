@@ -16,6 +16,7 @@ namespace RPGMap
 
 
         Player player;
+        HPManager HPManager;
 
         public ItemPickup(int x, int y)
         {
@@ -26,7 +27,6 @@ namespace RPGMap
 
         public void UpdatePickupState(int x, int y)
         {
-            // Update the layout to replace the collected pickup with a dash
             map.layout[y, x] = '-';
         }
 
@@ -74,6 +74,10 @@ namespace RPGMap
             {
                 player.IncreaseDamage();
             }
+        }
+        public void HealFullHealth()
+        {
+            HPManager.Heal(HPManager.ReturnsMaxHP() - HPManager.ReturnsCurrentHP());
         }
     }
 }

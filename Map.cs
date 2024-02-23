@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RPGMap;
+using System.Xml.Serialization;
 
 namespace FirstPlayable
 {
@@ -78,7 +79,31 @@ namespace FirstPlayable
                 for (int l = 0; l < mapWidth; l++)
                 {
                     char tile = layout[k, l];
+                    Console.BackgroundColor = ConsoleColor.White;
+                    switch (tile)
+                    {
+                        case '=':
+                            Console.ForegroundColor = ConsoleColor.Green; break;
+                        case '-':
+                            Console.ForegroundColor = ConsoleColor.White; break;
+                        case '#':
+                            Console.ForegroundColor = ConsoleColor.DarkGreen; break;
+                        case '@':
+                            Console.ForegroundColor = ConsoleColor.Yellow; break;
+                        case 'P':
+                            Console.ForegroundColor = ConsoleColor.Magenta; break;
+                        case 'H':
+                            Console.ForegroundColor = ConsoleColor.Yellow; break;
+                        case '^':
+                            Console.ForegroundColor = ConsoleColor.Red; break;
+                        case 'X':
+                            Console.ForegroundColor= ConsoleColor.Black; break;
+                    }
 
+                    if (tile == '#' && !player.levelComplete)
+                    {
+                        layout[k, l] = '#';
+                    }
                     if (tile == '=' && !player.levelComplete)
                     {
                         player.positionX = l;
@@ -105,15 +130,6 @@ namespace FirstPlayable
                         layout[k, l] = '-';
                     }
                     bool pickupDrawn = false;
-                   //foreach (var pickup in damagePickups)
-                   //{
-                   //    if (pickup.X == l && pickup.Y == k && !pickup.IsCollected)
-                   //    {
-                   //        pickup.DrawPower();
-                   //        pickupDrawn = true;
-                   //        break;
-                   //    }
-                   //}
                    if (!pickupDrawn)
                    {
                        Console.Write(tile);
@@ -126,7 +142,7 @@ namespace FirstPlayable
                         {
                             if (diamond.X == l && diamond.Y == k)
                             {
-                                diamond.Draw();
+                                Console.ForegroundColor = ConsoleColor.White;
                                 diamondDrawn = true;
                                 break;
                             }
@@ -136,10 +152,12 @@ namespace FirstPlayable
                             Console.Write('-');
                         }
                     }
+                   
                     else
                     {
                         Console.Write(tile);
                     }
+
                 }
                 Console.WriteLine();
             }
