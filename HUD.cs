@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FirstPlayable;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,38 +9,23 @@ namespace RPGMap
 {
     internal class HUD
     {
-        Map map;
-        Player player;
+        private int mapHeight;
+
+        public HUD(int mapHeight)
+        {
+            this.mapHeight = mapHeight;
+        }
+
+        public void DisplayHUD(Player player, Enemy enemy, Enemy boss, Enemy bomb)
+        {
+            Console.SetCursorPosition(0, mapHeight + 1);
+            Console.WriteLine($"Player Health: {player.HPManager.ReturnsCurrentHP()}/{player.HPManager.ReturnsMaxHP()} | Collected Diamond: {player.currentDiamond} | Enemy Health: {enemy.HPManager.ReturnsCurrentHP()}/{enemy.HPManager.ReturnsMaxHP()}| Boss Health: {boss.HPManager.ReturnsCurrentHP()}/{boss.HPManager.ReturnsMaxHP()}| Bomb Health: {bomb.HPManager.ReturnsCurrentHP()}/{bomb.HPManager.ReturnsMaxHP()}");
+        }
+
         public void DisplayLegend()
         {
-            //Console.SetCursorPosition(0, map.maxY + 4);
-            Console.SetCursorPosition(0, map.maxY + 5);
-            Console.WriteLine("| Map Legend");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("| Player = + ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write(" Enemy = B ");
-            Console.WriteLine("\n");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("| Walls = # |");
-            Console.WriteLine("\n");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write("| Floor = - |");
-            Console.WriteLine("\n");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write(" SpikeTrap = ^ ");
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(" Exit = X |");
-            Console.ResetColor();
-            Console.WriteLine();
+            Console.SetCursorPosition(0, mapHeight + 2);
+            Console.WriteLine("Player = !" + "\nEnemy = E" + "\nWalls = #" + "\nFloor = -" + "\nDiamonds = @" + "\nSpikeTrap = ^  Door: X");
         }
-
-        public void DisplayHUD()
-        {
-
-            Console.SetCursorPosition(0, map.maxY + 2);
-            Console.WriteLine($"|| Health: {player.currentHP}/{player.maxHP}||");
-            DisplayLegend();
-        }
-    }
+    } 
 }

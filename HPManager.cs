@@ -8,20 +8,20 @@ namespace RPGMap
 {
     internal class HPManager
     {
-        public int maxHP;
-        public int currentHP;
+        private int maxHP;
+        private int currentHP;
 
         public HPManager(int SetHP) 
         {
             maxHP = SetHP;
             currentHP = SetHP;
         }
-        public int GetCurrentHP()
+        public int ReturnsCurrentHP()
         {
             return currentHP;
         }
 
-        public int GetMaximumHealth()
+        public int ReturnsMaxHP()
         {
             return maxHP;
         }
@@ -41,11 +41,9 @@ namespace RPGMap
                 currentHP = maxHP;
         }
 
-        // Check Health
         public bool IsDead()
         {
             return currentHP <= 0;
         }
     }
-}
 }

@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FirstPlayable;
 
 namespace RPGMap
 {
-    internal class Program
+    internal class Program : GameManager
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
+            GameManager game = new GameManager();
             game.Start();
         }
     }
