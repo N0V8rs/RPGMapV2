@@ -1,18 +1,13 @@
 ﻿using RPGMap;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FirstPlayable
 {
+
     internal class Enemy
     {
-        // variables | encapsulation
-
         public HPManager HPManager;
-        Player player;
+        private Player player;
         public int enemyDamage { get; set; }
         public int positionX { get; set; }
         public int positionY { get; set; }
@@ -37,6 +32,7 @@ namespace FirstPlayable
             positionY = startY;
             enemyAlive = isAlive;
         }
+
         public Enemy(int maxHealth, int damage, int startX, int startY, int turns)
         {
             HPManager = new HPManager(maxHealth);
@@ -51,60 +47,48 @@ namespace FirstPlayable
         {
             int enemyMovementX = positionX;
             int enemyMovementY = positionY;
-            int newEnemyPositionX = positionX;
-            int newEnemyPositionY = positionY;
 
             Random randomRoll = new Random();
 
             if (enemyAlive)
             {
                 int rollResult = randomRoll.Next(1, 5);
-                while ((enemyMovementX == playerX && enemyMovementY == playerY) ||
-                       (enemyMovementX == newEnemyPositionX && enemyMovementY == newEnemyPositionY) ||
-                       mapLayout[enemyMovementY, enemyMovementX] == '#' || // Walls
-                       mapLayout[enemyMovementY, enemyMovementX] == 'P' || // Power pickup
-                       mapLayout[enemyMovementY, enemyMovementX] == 'H' || // Health pickup
-                       mapLayout[enemyMovementY, enemyMovementX] == '^')   // Spike trap
+
+                switch (rollResult)
                 {
-                    rollResult = randomRoll.Next(1, 5);
-
-                    if (rollResult == 1)
-                    {
+                    case 1:
                         enemyMovementY = positionY + 1;
-                        if (enemyMovementY >= mapHeight)
+                        if (enemyMovementY >= mapHeight || mapLayout[enemyMovementY, enemyMovementX] == '#' || mapLayout[enemyMovementY, enemyMovementX] == 'P' || mapLayout[enemyMovementY, enemyMovementX] == 'H' || mapLayout[enemyMovementY, enemyMovementX] == '^')
                         {
-                            enemyMovementY = mapHeight - 1;
+                            enemyMovementY = positionY;
                         }
-                    }
-                    else if (rollResult == 2)
-                    {
+                        break;
+                    case 2:
                         enemyMovementY = positionY - 1;
-                        if (enemyMovementY <= 0)
+                        if (enemyMovementY < 0 || mapLayout[enemyMovementY, enemyMovementX] == '#' || mapLayout[enemyMovementY, enemyMovementX] == 'P' || mapLayout[enemyMovementY, enemyMovementX] == 'H' || mapLayout[enemyMovementY, enemyMovementX] == '^')
                         {
-                            enemyMovementY = 0;
+                            enemyMovementY = positionY;
                         }
-                    }
-                    else if (rollResult == 3)
-                    {
+                        break;
+                    case 3:
                         enemyMovementX = positionX - 1;
-                        if (enemyMovementX <= 0)
+                        if (enemyMovementX < 0 || mapLayout[enemyMovementY, enemyMovementX] == '#' || mapLayout[enemyMovementY, enemyMovementX] == 'P' || mapLayout[enemyMovementY, enemyMovementX] == 'H' || mapLayout[enemyMovementY, enemyMovementX] == '^')
                         {
-                            enemyMovementX = 0;
+                            enemyMovementX = positionX;
                         }
-                    }
-                    else // rollResult == 4
-                    {
+                        break;
+                    case 4:
                         enemyMovementX = positionX + 1;
-                        if (enemyMovementX >= mapWidth)
+                        if (enemyMovementX >= mapWidth || mapLayout[enemyMovementY, enemyMovementX] == '#' || mapLayout[enemyMovementY, enemyMovementX] == 'P' || mapLayout[enemyMovementY, enemyMovementX] == 'H' || mapLayout[enemyMovementY, enemyMovementX] == '^')
                         {
-                            enemyMovementX = mapWidth - 1;
+                            enemyMovementX = positionX;
                         }
-                    }
+                        break;
                 }
-            }
 
-            positionY = enemyMovementY;
-            positionX = enemyMovementX;
+                positionY = enemyMovementY;
+                positionX = enemyMovementX;
+            }
         }
 
         public void MoveTowardsPlayer(Player player, char[,] mapLayout)
@@ -149,8 +133,7 @@ namespace FirstPlayable
             }
         }
 
-
-        public void EnemyMovement(Player player, char[,] mapLayout)
+        public void EnemyMovement2(Player player, char[,] mapLayout)
         {
             int distanceX = Math.Abs(positionX - player.positionX);
             int distanceY = Math.Abs(positionY - player.positionY);
@@ -174,12 +157,12 @@ namespace FirstPlayable
 
             if (movesSinceLastAttack >= 3 && enemyAlive)
             {
-                    player.HPManager.Damage(enemyDamage);
+                player.HPManager.Damage(enemyDamage);
 
-                    if (player.HPManager.IsDead())
-                    {
-                        player.gameOver = true;
-                    }
+                if (player.HPManager.IsDead())
+                {
+                    player.gameOver = true;
+                }
                 int playerDirectionX = Math.Sign(player.positionX - positionX);
                 int playerDirectionY = Math.Sign(player.positionY - positionY);
 
@@ -192,13 +175,11 @@ namespace FirstPlayable
                     positionX += moveX;
                     positionY += moveY;
                     mapLayout[positionY, positionX] = '-';
-
                 }
 
                 movesSinceLastAttack = 0;
             }
         }
-
 
         public void AttackPlayer(Player player)
         {
@@ -207,7 +188,7 @@ namespace FirstPlayable
 
             if ((distanceX == 0 && distanceY <= 1) || (distanceY == 0 && distanceX <= 1))
             {
-                player.HPManager.Damage(enemyDamage); 
+                player.HPManager.Damage(enemyDamage);
 
                 if (player.HPManager.IsDead())
                 {
@@ -226,6 +207,7 @@ namespace FirstPlayable
                 Console.ResetColor();
             }
         }
+
         public void DrawBomb()
         {
             if (enemyAlive == true)

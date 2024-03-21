@@ -1,21 +1,24 @@
-﻿using System;
-using System.IO;
+﻿using RPGMap;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RPGMap;
-using System.Xml.Serialization;
+using System.IO;
+using System.Security.AccessControl;
 
 namespace FirstPlayable
 {
+    //C# naming convention is to use PascalCase for class names?
+
     internal class Map
     {
-        private string path;
-        private string[] floor;
+        private readonly string path;
+        private readonly string[] floor;
         public List<ItemPickup> diamonds;
         public List<ItemPickup> powerPickups;
         public List<ItemPickup> healthPickups;
+        public List<Enemy> CommonEnemy;
+        public List<Enemy> boss;
+        public List<Enemy> bomb;
+        public Enemy enemy;
 
         public char[,] layout;
         public int mapWidth { get; set; }
@@ -32,6 +35,9 @@ namespace FirstPlayable
             diamonds = new List<ItemPickup>();
             powerPickups = new List<ItemPickup>();
             healthPickups = new List<ItemPickup>();
+            CommonEnemy = new List<Enemy>();
+            boss = new List<Enemy>();
+            bomb = new List<Enemy>();
             CreateMap();
         }
 
@@ -54,8 +60,7 @@ namespace FirstPlayable
                     }
                     else if (layout[i, j] == 'E')
                     {
-                        initialEnemyPositionX = j;
-                        initialEnemyPositionY = i;
+                        CommonEnemy.Add(new Enemy(10, 1, j, i));
                     }
                     if (layout[i, j] == 'P')
                     {
@@ -69,8 +74,7 @@ namespace FirstPlayable
             }
         }
 
-
-        public void DrawMap(Player player, Enemy enemy, Enemy boss, Enemy bomb)
+        public void DrawMap(Player player, List<Enemy> CommonEnmey, Enemy boss, Enemy bomb)
         {
             Console.Clear();
 
@@ -79,7 +83,7 @@ namespace FirstPlayable
                 for (int l = 0; l < mapWidth; l++)
                 {
                     char tile = layout[k, l];
-                    
+
                     switch (tile)
                     {
                         case '=':
@@ -97,7 +101,7 @@ namespace FirstPlayable
                         case '^':
                             Console.ForegroundColor = ConsoleColor.Red; break;
                         case 'X':
-                            Console.ForegroundColor= ConsoleColor.Blue; break;
+                            Console.ForegroundColor = ConsoleColor.Blue; break;
                     }
 
                     if (tile == '#' && !player.levelComplete)
@@ -113,9 +117,14 @@ namespace FirstPlayable
                     }
                     else if (tile == 'E' && !player.levelComplete)
                     {
-                        enemy.positionX = l;
-                        enemy.positionY = k;
-                        layout[k, l] = '-';
+                        foreach (var commonEnemy in CommonEnemy)
+                        {
+                            //aaaenemy.DrawEnemy();
+                            //Console.SetCursorPosition(commonEnemy.positionX, commonEnemy.positionY);
+                            //Console.ForegroundColor = ConsoleColor.Red;
+                            //Console.Write("E");
+                            //Console.ResetColor();
+                        }
                     }
                     else if (tile == 'B' && !player.levelComplete)
                     {
@@ -129,40 +138,76 @@ namespace FirstPlayable
                         bomb.positionY = k;
                         layout[k, l] = '-';
                     }
-                    bool pickupDrawn = false;
-                   if (!pickupDrawn)
-                   {
-                       Console.Write(tile);
-                   }
-
+                    else if (tile == 'P' && !player.levelComplete)
+                    {
+                        foreach (var powerPickup in powerPickups)
+                        {
+                            if (powerPickup.X == l && powerPickup.Y == k)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Magenta;
+                                Console.Write("P");
+                                Console.ResetColor();
+                            }
+                        }
+                    }
+                    else if (tile == 'H' && !player.levelComplete)
+                    {
+                        foreach (var healthPickup in healthPickups)
+                        {
+                            if (healthPickup.X == l && healthPickup.Y == k)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write("H");
+                                Console.ResetColor();
+                            }
+                        }
+                    }
                     else if (tile == '@' && !player.levelComplete)
                     {
-                        bool diamondDrawn = false;
                         foreach (var diamond in diamonds)
                         {
                             if (diamond.X == l && diamond.Y == k)
                             {
-                                Console.ForegroundColor = ConsoleColor.White;
-                                diamondDrawn = true;
-                                break;
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write("@");
+                                Console.ResetColor();
                             }
                         }
-                        if (!diamondDrawn)
-                        {
-                            Console.Write('-');
-                        }
                     }
-                   
+                    //bool pickupDrawn = false;
+                    //if (!pickupDrawn)
+                    //{
+                    //    Console.Write(tile);
+                    //}
+                    //else if (tile == '@' && !player.levelComplete)
+                    //{
+                    //    bool diamondDrawn = false;
+                    //    foreach (var diamond in diamonds)
+                    //    {
+                    //        if (diamond.X == l && diamond.Y == k)
+                    //        {
+                    //            Console.ForegroundColor = ConsoleColor.White;
+                    //            diamondDrawn = true;
+                    //            break;
+                    //        }
+                    //    }
+                    //    if (!diamondDrawn)
+                    //    {
+                    //        Console.Write('-');
+                    //    }
+                    //}
                     else
                     {
                         Console.Write(tile);
                     }
-
                 }
                 Console.WriteLine();
             }
             player.DrawPlayer();
-            enemy.DrawEnemy();
+            foreach (var commonEnemy in CommonEnemy)
+            {
+                commonEnemy.DrawEnemy();
+            }
             boss.DrawBoss();
             bomb.DrawBomb();
 
@@ -170,4 +215,3 @@ namespace FirstPlayable
         }
     }
 }
-

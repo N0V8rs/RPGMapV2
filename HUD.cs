@@ -1,9 +1,7 @@
 ﻿using FirstPlayable;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime;
 
 namespace RPGMap
 {
@@ -22,26 +20,28 @@ namespace RPGMap
             timeBeforeNextAttack = time;
         }
 
-        public void DisplayHUD(Player player, Enemy enemy, Enemy boss, Enemy bomb)
+        public void DisplayHUD(Player player, List<Enemy> commonEnemies, Enemy boss, Enemy bomb)
         {
             Console.SetCursorPosition(0, mapHeight + 1);
-            Console.WriteLine($"Player HP: {player.HPManager.ReturnsCurrentHP()}/{player.HPManager.ReturnsMaxHP()} | Player Damage: {player.playerDamage} | Collected Diamond: {player.currentDiamond}");
+            Console.WriteLine($"Player HP: {player.HPManager.ReturnsCurrentHP()}/{player.HPManager.ReturnsMaxHP()} | Player Damage: {GameSettings.PlayerDamage} | Collected Diamond: {player.currentDiamond}");
 
-            if (enemy.enemyAlive)
+            foreach (var enemy in commonEnemies)
             {
-                Console.WriteLine($"Enemy HP: {enemy.HPManager.ReturnsCurrentHP()}/{enemy.HPManager.ReturnsMaxHP()}");
+                if (enemy.enemyAlive)
+                {
+                    Console.WriteLine($"Enemy HP: {enemy.HPManager.ReturnsCurrentHP()}/{enemy.HPManager.ReturnsMaxHP()} | Enemy Damage: {GameSettings.EnemyDamage}");
+                }
             }
 
             if (bomb.enemyAlive)
             {
-                Console.WriteLine($"Sniper HP: {bomb.HPManager.ReturnsCurrentHP()}/{bomb.HPManager.ReturnsMaxHP()} Time before the attack: {timeBeforeNextAttack}|2");
-            }
-            
-            if (boss.enemyAlive)
-            {
-                Console.WriteLine($"Boss HP: {boss.HPManager.ReturnsCurrentHP()}/{boss.HPManager.ReturnsMaxHP()}");
+                Console.WriteLine($"Sniper HP: {bomb.HPManager.ReturnsCurrentHP()}/{bomb.HPManager.ReturnsMaxHP()} | Sniper Damage: {GameSettings.EnemyDamage} | Time before the attack: {timeBeforeNextAttack}|2");
             }
 
+            if (boss.enemyAlive)
+            {
+                Console.WriteLine($"Boss HP: {boss.HPManager.ReturnsCurrentHP()}/{boss.HPManager.ReturnsMaxHP()} | Boss Damage: {GameSettings.EnemyDamage}");
+            }
         }
 
         public void DisplayLegend()

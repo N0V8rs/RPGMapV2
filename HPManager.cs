@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RPGMap
+﻿namespace RPGMap
 {
-    internal class HPManager
+    public class HPManager
     {
         private int maxHP;
         private int currentHP;
 
-        public HPManager(int SetHP) 
+        public HPManager(int SetHP)
         {
             maxHP = SetHP;
             currentHP = SetHP;

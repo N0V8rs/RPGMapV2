@@ -1,10 +1,7 @@
 ﻿using RPGMap;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace FirstPlayable
 {
@@ -13,14 +10,8 @@ namespace FirstPlayable
         // variables | encapsulation
 
         public HPManager HPManager;
-        ItemPickup Power;
-        public int playerDamage { get; set; }
-        public int positionX { get; set; }
-        public int positionY { get; set; }
-        public int currentDiamond { get; set; }
-        public bool youWin { get; set; }
-        public bool gameOver { get; set; }
-        public bool levelComplete { get; set; }
+        private ItemPickup Power;
+        public Map map;
 
         public Player(int maxHealth, int health, int damage, int startX, int startY)
         {
@@ -31,8 +22,42 @@ namespace FirstPlayable
             positionY = startY;
         }
 
+        public int currentDiamond { get; set; }
+        public bool gameOver { get; set; }
+        public bool levelComplete { get; set; }
+        public int playerDamage { get; set; }
+        public int positionX { get; set; }
+        public int positionY { get; set; }
+        public bool youWin { get; set; }
+
+        public void DrawExit()
+        {
+            Console.SetCursorPosition(positionX, positionY);
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("X");
+            Console.ResetColor();
+        }
+
+        public void DrawPlayer()
+        {
+            Console.SetCursorPosition(positionX, positionY);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("!");
+            Console.ResetColor();
+        }
+
+        public void HealFullHealth()
+        {
+            HPManager.Heal(HPManager.ReturnsMaxHP() - HPManager.ReturnsCurrentHP());
+        }
+
+        public void IncreaseDamage()
+        {
+            GameSettings.PlayerDamage += GameSettings.PowerUp;
+        }
+
         // recieves player input
-        public void PlayerInput(Map map, Enemy enemy, Enemy boss, Enemy bomb)
+        public void PlayerInput(Map map, List<Enemy> commonEnemy, Enemy boss, Enemy bomb)
         {
             ConsoleKeyInfo playerController;
             bool moved = false;
@@ -49,7 +74,10 @@ namespace FirstPlayable
 
             if (moved == false && playerController.Key == ConsoleKey.Spacebar)
             {
-                AttackEnemy(enemy);
+                foreach (var enemy in commonEnemy)
+                {
+                    AttackEnemy(enemy);
+                }
                 moved = true;
                 return;
             }
@@ -58,28 +86,28 @@ namespace FirstPlayable
             if (playerController.Key == ConsoleKey.UpArrow || playerController.Key == ConsoleKey.W)
             {
                 movementY = Math.Max(positionY - 1, 0);
-                HandleMovement(map, enemy, boss, bomb, ref moved, ref newPlayerPositionX, ref newPlayerPositionY, movementX, movementY);
+                PlayerMovement(map, commonEnemy, boss, bomb, ref moved, ref newPlayerPositionX, ref newPlayerPositionY, movementX, movementY);
             }
 
             // moves down
             if (playerController.Key == ConsoleKey.DownArrow || playerController.Key == ConsoleKey.S)
             {
                 movementY = Math.Min(positionY + 1, map.mapHeight - 1);
-                HandleMovement(map, enemy, boss, bomb, ref moved, ref newPlayerPositionX, ref newPlayerPositionY, movementX, movementY);
+                PlayerMovement(map, commonEnemy, boss, bomb, ref moved, ref newPlayerPositionX, ref newPlayerPositionY, movementX, movementY);
             }
 
             // moves left
             if (playerController.Key == ConsoleKey.LeftArrow || playerController.Key == ConsoleKey.A)
             {
                 movementX = Math.Max(positionX - 1, 0);
-                HandleMovement(map, enemy, boss, bomb, ref moved, ref newPlayerPositionX, ref newPlayerPositionY, movementX, movementY);
+                PlayerMovement(map, commonEnemy, boss, bomb, ref moved, ref newPlayerPositionX, ref newPlayerPositionY, movementX, movementY);
             }
 
             // moves right
             if (playerController.Key == ConsoleKey.RightArrow || playerController.Key == ConsoleKey.D)
             {
                 movementX = Math.Min(positionX + 1, map.mapWidth - 1);
-                HandleMovement(map, enemy, boss, bomb, ref moved, ref newPlayerPositionX, ref newPlayerPositionY, movementX, movementY);
+                PlayerMovement(map, commonEnemy, boss, bomb, ref moved, ref newPlayerPositionX, ref newPlayerPositionY, movementX, movementY);
             }
 
             // winning door
@@ -92,30 +120,21 @@ namespace FirstPlayable
             if (map.layout[positionY, positionX] == '@')
             {
                 currentDiamond += 1;
-                map.layout[positionY, positionX] = '-'; 
+                map.layout[positionY, positionX] = '-';
                 foreach (var diamond in map.diamonds)
                 {
                     if (diamond.X == positionX && diamond.Y == positionY)
                     {
-                        diamond.Collect(); 
-                        break; 
-                    }
-                }
-            }
-            if (map.layout[positionY, positionX] == 'P')
-            {
-                IncreaseDamage();
-                map.layout[positionY, positionX] = '-';
-                foreach (var powerPickup in map.powerPickups)
-                {
-                    if (powerPickup.X == positionX && powerPickup.Y == positionY)
-                    {
-                        powerPickup.Collect();
+                        diamond.Collect();
                         break;
                     }
                 }
             }
-
+            if (map.layout[movementY, movementX] == 'P')
+            {
+                IncreaseDamage();
+                map.layout[movementY, movementX] = '.'; // replace the power-up with a floor tile or empty space
+            }
             if (map.layout[positionY, positionX] == 'H')
             {
                 HealFullHealth();
@@ -136,24 +155,42 @@ namespace FirstPlayable
             }
         }
 
-        private void HandleMovement(Map map, Enemy enemy, Enemy boss, Enemy bomb, ref bool moved, ref int newPlayerPositionX, ref int newPlayerPositionY, int movementX, int movementY)
+        private void AttackEnemy(Enemy enemy)
+        {
+            if (Math.Abs(positionX - enemy.positionX) <= 1 && Math.Abs(positionY - enemy.positionY) <= 1)
+            {
+                enemy.HPManager.Damage(GameSettings.PlayerDamage);
+                if (enemy.HPManager.IsDead())
+                {
+                    enemy.positionX = 0;
+                    enemy.positionY = 0;
+                    enemy.enemyAlive = false;
+                }
+            }
+        }
+
+        private void PlayerMovement(Map map, List<Enemy> commonEnemy, Enemy boss, Enemy bomb, ref bool moved, ref int newPlayerPositionX, ref int newPlayerPositionY, int movementX, int movementY)
         {
             if (moved == false && map.layout[movementY, movementX] != '#')
             {
-                if (movementY == enemy.positionY && movementX == enemy.positionX)
+                foreach (var enemy in commonEnemy)
                 {
-                    enemy.HPManager.Damage(playerDamage);
-                    if (enemy.HPManager.IsDead())
+                    if (movementY == enemy.positionY && movementX == enemy.positionX)
                     {
-                        enemy.positionX = 0;
-                        enemy.positionY = 0;
-                        enemy.enemyAlive = false;
+                        enemy.HPManager.Damage(GameSettings.PlayerDamage);
+                        if (enemy.HPManager.IsDead())
+                        {
+                            enemy.positionX = 0;
+                            enemy.positionY = 0;
+                            enemy.enemyAlive = false;
+                        }
+                        return;
                     }
-                    return;
                 }
+
                 if (movementY == boss.positionY && movementX == boss.positionX)
                 {
-                    boss.HPManager.Damage(playerDamage);
+                    boss.HPManager.Damage(GameSettings.PlayerDamage);
                     if (boss.HPManager.IsDead())
                     {
                         boss.positionX = 0;
@@ -162,9 +199,10 @@ namespace FirstPlayable
                     }
                     return;
                 }
-                if(movementY == bomb.positionY && movementX == bomb.positionX)
+
+                if (movementY == bomb.positionY && movementX == bomb.positionX)
                 {
-                    bomb.HPManager.Damage(playerDamage);
+                    bomb.HPManager.Damage(GameSettings.PlayerDamage);
                     if (bomb.HPManager.IsDead())
                     {
                         bomb.positionX = 0;
@@ -174,82 +212,40 @@ namespace FirstPlayable
                     return;
                 }
 
-                if (map.layout[movementY, movementX] == '^')
+                if (moved == false && map.layout[movementY, movementX] != '#')
                 {
-                    HPManager.Damage(1);
-                    if (HPManager.IsDead())
+                    foreach (var enemy in commonEnemy)
                     {
-                        gameOver = true;
+                        if (movementY == enemy.positionY && movementX == enemy.positionX)
+                        {
+                            AttackEnemy(enemy);
+                            return;
+                        }
+                    }
+
+                    if (map.layout[movementY, movementX] == '^')
+                    {
+                        HPManager.Damage(1);
+                        if (HPManager.IsDead())
+                        {
+                            gameOver = true;
+                        }
+                    }
+
+                    if (map.layout[movementY, movementX] == 'E')
+                    {
+                        movementY = positionY;
+                        movementX = positionX;
+                        return;
+                    }
+                    else
+                    {
+                        moved = true;
+                        positionY = movementY;
+                        positionX = movementX;
                     }
                 }
-
-                if (map.layout[movementY, movementX] == 'E')
-                {
-                    movementY = positionY;
-                    movementX = positionX;
-                    return;
-                }
-
-                else
-                {
-                    moved = true;
-                    positionY = movementY;
-                    positionX = movementX;
-                }
             }
-        }
-        public void IncreaseDamage()
-        {
-            playerDamage += 1;
-        }
-
-        public void HealFullHealth()
-        {
-            HPManager.Heal(HPManager.ReturnsMaxHP() - HPManager.ReturnsCurrentHP());
-        }
-
-        private void AttackEnemy(Enemy enemy)
-        {
-            if (Math.Abs(positionX - enemy.positionX) <= 1 && Math.Abs(positionY - enemy.positionY) <= 1)
-            {
-                enemy.HPManager.Damage(playerDamage);
-                if (enemy.HPManager.IsDead())
-                {
-                    enemy.positionX = 0;
-                    enemy.positionY = 0;
-                    enemy.enemyAlive = false;
-                }
-            }
-        }
-        //private void AttackBoss(Enemy boss)
-        //{
-        //    if (Math.Abs(positionX - boss.positionX) <= 1 && Math.Abs(positionY - boss.positionY) <= 1)
-        //    {
-        //        boss.HPManager.Damage(playerDamage);
-        //        if (boss.HPManager.IsDead())
-        //        {
-        //            boss.positionX = 0;
-        //            boss.positionY = 0;
-        //            boss.enemyAlive = false;
-        //        }
-        //    }
-        //}
-
-        public void DrawPlayer()
-        {
-            Console.SetCursorPosition(positionX, positionY);
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("!");
-            Console.ResetColor();
-        }
-
-        public void DrawExit()
-        {
-            Console.SetCursorPosition(positionX, positionY);
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("X");
-            Console.ResetColor();
-
         }
     }
 }

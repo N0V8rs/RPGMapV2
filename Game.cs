@@ -1,9 +1,11 @@
 ﻿using FirstPlayable;
 using RPGMap;
 using System;
+using System.Runtime;
 
 internal class GameManager
 {
+
     private Map map;
     private ItemPickup healUP;
     private ItemPickup powerUP;
@@ -12,14 +14,14 @@ internal class GameManager
     private Enemy boss;
     private Enemy bomb;
     private HUD HUD;
-
+    
     public GameManager()
     {
         map = new Map("NorthWoods.txt");
-        player = new Player(10, 10, 1, map.initialPlayerPositionX, map.initialPlayerPositionY);
-        enemy = new Enemy(5, 1, 8, 8, true);
-        bomb = new Enemy(2,1, map.initialEnemyPositionX, map.initialEnemyPositionY);
-        boss = new Enemy(10, 1, map.initialEnemyPositionX, map.initialEnemyPositionY);
+        player = new Player(GameSettings.PlayerInitialHealth, 10, 1, map.initialPlayerPositionX, map.initialPlayerPositionY);
+        enemy = new Enemy(GameSettings.EnemyInitialHealth, GameSettings.EnemyDamage, 0, 0, true);
+        bomb = new Enemy(GameSettings.EnemyInitialHealth, GameSettings.EnemyDamage, map.initialEnemyPositionX, map.initialEnemyPositionY);
+        boss = new Enemy(GameSettings.EnemyInitialHealth, GameSettings.EnemyDamage, map.initialEnemyPositionX, map.initialEnemyPositionY);
         HUD = new HUD(map.mapHeight);
     }
 
@@ -45,13 +47,13 @@ internal class GameManager
 
         while (!player.gameOver && !player.youWin)
         {
-            map.DrawMap(player, enemy, boss, bomb);
-            HUD.DisplayHUD(player, enemy, boss, bomb);
+            map.DrawMap(player, map.CommonEnemy, boss, bomb);
+            HUD.DisplayHUD(player, map.CommonEnemy, boss, bomb);
             HUD.DisplayLegend();
             PlayerInput();
 
             EnemyAction();
-            bomb.AttackEveryTwoMoves(player,map.layout);
+            bomb.AttackEveryTwoMoves(player, map.layout);
             HUD.UpdateTimeBeforeNextAttack(bomb.movesSinceLastAttack);
             boss.MoveTowardsPlayer(player, map.layout);
         }
@@ -77,16 +79,14 @@ internal class GameManager
 
     private void PlayerInput()
     {
-        player.PlayerInput(map, enemy, boss, bomb);
+        player.PlayerInput(map, map.CommonEnemy, boss, bomb);
         foreach (var pickup in map.powerPickups)
         {
             if (pickup.X == player.positionX && pickup.Y == player.positionY && !pickup.IsCollected)
             {
+                pickup.IsCollected = true;
                 player.IncreaseDamage();
-                if (pickup.IsCollected)
-                {
-                    map.layout[player.positionX, player.positionY] = '-';
-                }
+                map.layout[player.positionX, player.positionY] = '-';
             }
         }
         foreach (var pickup in map.healthPickups)
@@ -102,15 +102,20 @@ internal class GameManager
     private void EnemyAction()
     {
         Random random = new Random();
-        int action = random.Next(0, 2);
 
-        if (action == 0)
+        for (int i = map.CommonEnemy.Count - 1; i >= 0; i--)
         {
-            enemy.EnemyMovement(player.positionX, player.positionY, map.mapWidth, map.mapHeight, map.layout);
-        }
-        else
-        {
-            enemy.AttackPlayer(player);
+            var enemy = map.CommonEnemy[i];
+            int action = random.Next(0, 2);
+
+            if (action == 0)
+            {
+                enemy.EnemyMovement(player.positionX, player.positionY, map.mapWidth, map.mapHeight, map.layout);
+            }
+            else
+            {
+                enemy.AttackPlayer(player);
+            }
         }
     }
 }

@@ -43,9 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BossEnemy.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameSettings.cs" />
     <Compile Include="HPManager.cs" />
     <Compile Include="HUD.cs" />
     <Compile Include="ItemPickups.cs" />
