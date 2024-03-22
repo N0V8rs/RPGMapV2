@@ -61,6 +61,7 @@ namespace FirstPlayable
                     else if (layout[i, j] == 'E')
                     {
                         CommonEnemy.Add(new Enemy(10, 1, j, i));
+                        layout[i,j] = '-';
                     }
                     if (layout[i, j] == 'P')
                     {
@@ -115,17 +116,17 @@ namespace FirstPlayable
                         player.levelComplete = true;
                         layout[k, l] = '#';
                     }
-                    else if (tile == 'E' && !player.levelComplete)
-                    {
-                        foreach (var commonEnemy in CommonEnemy)
-                        {
-                            //aaaenemy.DrawEnemy();
-                            //Console.SetCursorPosition(commonEnemy.positionX, commonEnemy.positionY);
-                            //Console.ForegroundColor = ConsoleColor.Red;
-                            //Console.Write("E");
-                            //Console.ResetColor();
-                        }
-                    }
+                   //else if (tile == 'E' && !player.levelComplete)
+                   //{
+                   //    foreach (var commonEnemy in CommonEnemy)
+                   //    {
+                   //        //aaaenemy.DrawEnemy();
+                   //        //Console.SetCursorPosition(commonEnemy.positionX, commonEnemy.positionY);
+                   //        //Console.ForegroundColor = ConsoleColor.Red;
+                   //        //Console.Write("E");
+                   //        //Console.ResetColor();
+                   //    }
+                   //}
                     else if (tile == 'B' && !player.levelComplete)
                     {
                         boss.positionX = l;

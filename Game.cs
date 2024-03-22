@@ -84,9 +84,11 @@ internal class GameManager
         {
             if (pickup.X == player.positionX && pickup.Y == player.positionY && !pickup.IsCollected)
             {
-                pickup.IsCollected = true;
                 player.IncreaseDamage();
-                map.layout[player.positionX, player.positionY] = '-';
+                if (pickup.IsCollected)
+                {
+                    map.layout[player.positionX, player.positionY] = '-';
+                }
             }
         }
         foreach (var pickup in map.healthPickups)

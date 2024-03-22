@@ -2,14 +2,18 @@ using RPGMap;
 
 public class Entity
 {
-    public int positionX { get; set; }
-    public int positionY { get; set; }
     public HPManager HPManager { get; set; }
+    public int PositionX { get; set; }
+    public int PositionY { get; set; }
+    public bool IsAlive { get; set; }
+    public int Damage { get; set; }
 
-    public Entity(int positionX, int positionY, int initialHP, int startX, int startY)
+    public Entity(int maxHealth, int startX, int startY, int damage)
     {
-        this.positionX = positionX;
-        this.positionY = positionY;
-        this.HPManager = new HPManager(initialHP);
+        HPManager = new HPManager(maxHealth);
+        PositionX = startX;
+        PositionY = startY;
+        Damage = damage;
+        IsAlive = true;
     }
 }
