@@ -1,123 +1,160 @@
 ﻿using FirstPlayable;
 using RPGMap;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-internal class GameManager
+namespace RPGMap
 {
 
-    private Map map;
-    private ItemPickup healUP;
-    private ItemPickup powerUP;
-    private Player player;
-    private Enemy enemy;
-    private Enemy boss;
-    private Enemy bomb;
-    private HUD HUD;
-    
-    public GameManager()
+    internal class GameManager
     {
-        map = new Map("NorthWoods.txt");
-        player = new Player(GameSettings.PlayerInitialHealth, 10, 1, map.initialPlayerPositionX, map.initialPlayerPositionY);
-        enemy = new Enemy(GameSettings.EnemyInitialHealth, GameSettings.EnemyDamage, 0, 0, true);
-        bomb = new Enemy(GameSettings.EnemyInitialHealth, GameSettings.EnemyDamage, map.initialEnemyPositionX, map.initialEnemyPositionY);
-        boss = new Enemy(GameSettings.EnemyInitialHealth, GameSettings.EnemyDamage, map.initialEnemyPositionX, map.initialEnemyPositionY);
-        HUD = new HUD(map.mapHeight);
-    }
 
-    // Start up
-    public void Start()
-    {
-        Console.WriteLine("Entering NorthWoods");
-        Console.WriteLine("-------------------------------");
-        Console.WriteLine("\nYou as a Hunter must find Diamonds and kill anything in your way.");
-        Console.WriteLine("\nCollect all the diamonds or else");
-        Console.WriteLine("--------------------------------");
-        Console.WriteLine("You can attack by either running into the enemy.");
-        Console.WriteLine("enemy have different attacks so watch out.");
-        Console.WriteLine("E enemies attacks randomly when you next to them.");
-        Console.WriteLine("W is a sniper that deals damage you with infinite range.");
-        Console.WriteLine("B is a massive enemy only can move or attack that takes a while to damage the Player.");
-        Console.WriteLine("");
-        Console.WriteLine("Good luck on your advanture Hunter");
-        Console.WriteLine("");
-        Console.WriteLine("Press any key to start...");
-        Console.ReadKey(true);
-        Console.Clear();
+        private Stopwatch levelTimer = new Stopwatch();
+        private Map map;
+        private Player player;
 
-        while (!player.gameOver && !player.youWin)
+        BossEnemy boss;
+        CommonEnemy enemy;
+        SniperEnemy sniper;
+
+        private Settings settings = new Settings();
+        private List<EnemyManager> enemies = new List<EnemyManager>();
+        private HUD hud;
+
+        public string currentLevel { get; set; }
+
+
+        public void Init()
         {
-            map.DrawMap(player, map.CommonEnemy, boss, bomb);
-            HUD.DisplayHUD(player, map.CommonEnemy, boss, bomb);
-            HUD.DisplayLegend();
-            PlayerInput();
 
-            EnemyAction();
-            bomb.AttackEveryTwoMoves(player, map.layout);
-            HUD.UpdateTimeBeforeNextAttack(bomb.movesSinceLastAttack);
-            boss.MoveTowardsPlayer(player, map.layout);
+            // Initialization
+            if (currentLevel == null)
+            {
+                currentLevel = settings.MapFileName;
+            }
+            map = new Map(currentLevel, enemies);
+            player = new Player(settings.PlayerInitialHealth, settings.PlayerInitialDamage, settings.PlayerInitialLevel, map.initialPlayerPositionX, map.initialPlayerPositionY, map.layout, this);
+            hud = new HUD(player, map);
+
+
+
         }
 
-        Console.Clear();
-
-        // player wins
-        if (player.youWin)
+        public void Update()
         {
-            Console.WriteLine("You win!");
-            Console.WriteLine($"\nYou collected: {player.currentDiamond} Diamond!");
-            Console.WriteLine("There are more diamonds to find in the world");
+            map.UpdateMap(player, sniper, boss, enemy);
+            hud.UpdateLegend();
+            hud.UpdateHUD();
+        }
+
+
+        public void Draw()
+        {
+            Display();
+            foreach (var enemy in enemies)
+            {
+                enemy.DrawMovement(player.positionX, player.positionY, map.mapWidth, map.mapHeight, map.layout, player, enemies);
+            }
+        }
+
+        // Start up
+        public void Start()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Entering NorthWoods");
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("\nYou as a Hunter must find Diamonds and kill anything in your way.");
+            Console.WriteLine("\nCollect all the diamonds or else");
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine("You can attack by either running into the enemy.");
+            Console.WriteLine("enemy have different attacks so watch out.");
+            Console.WriteLine("E enemies attacks randomly when you next to them.");
+            Console.WriteLine("W is a sniper that deals damage you with infinite range.");
+            Console.WriteLine("B is a massive enemy only can move or attack that takes a while to damage the Player.");
+            Console.WriteLine("");
+            Console.WriteLine("Good luck on your advanture Hunter");
+            Console.WriteLine("");
+            Console.WriteLine("Press any key to start...");
             Console.ReadKey(true);
-        }
-        // players dead
-        else
-        {
-            Console.WriteLine("You died...");
-            Console.WriteLine("Try Again!");
-            Console.ReadKey(true);
-        }
-    }
+            Console.Clear();
+            Console.ResetColor();
 
-    private void PlayerInput()
-    {
-        player.PlayerInput(map, map.CommonEnemy, boss, bomb);
-        foreach (var pickup in map.powerPickups)
-        {
-            if (pickup.X == player.positionX && pickup.Y == player.positionY && !pickup.IsCollected)
+            // game loop uses Init/Update/Draw methods
+
+            Init();
+            while (!player.gameOver)
             {
-                player.IncreaseDamage();
-                if (pickup.IsCollected)
-                {
-                    map.layout[player.positionX, player.positionY] = '-';
-                }
+                Console.CursorVisible = false;
+                StartLevel();
+
+                Update();
+
+                Draw();
+
+
             }
-        }
-        foreach (var pickup in map.healthPickups)
-        {
-            if (pickup.X == player.positionX && pickup.Y == player.positionY && !pickup.IsCollected)
+
+            Console.Clear();
+
+            // player wins
+            if (player.youWin)
             {
-                pickup.IsCollected = true;
-                player.HealFullHealth();
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine("You win!");
+                Console.WriteLine($"\nYou collected: {player.currentDiamonds}");
+                Console.WriteLine("Try to get more if you haven't got them all");
+                Console.WriteLine("-------------------------------------------");
+                Console.WriteLine("-------------------------------------------");
+                EndLevel();
+                Console.WriteLine("-------------------------------------------");
+                Console.WriteLine("-------------------------------------------");
+                Console.ReadKey(true);
             }
-        }
-    }
-
-    private void EnemyAction()
-    {
-        Random random = new Random();
-
-        for (int i = map.CommonEnemy.Count - 1; i >= 0; i--)
-        {
-            var enemy = map.CommonEnemy[i];
-            int action = random.Next(0, 2);
-
-            if (action == 0)
-            {
-                enemy.EnemyMovement(player.positionX, player.positionY, map.mapWidth, map.mapHeight, map.layout);
-            }
+            // players dead
             else
             {
-                enemy.AttackPlayer(player);
+                Console.ForegroundColor = ConsoleColor.Red;
+                int centerX = (Console.WindowWidth - "You died...".Length) / 2;
+                Console.SetCursorPosition(centerX, Console.CursorTop);
+                Console.WriteLine("You died...");
+
+                Console.ReadKey(true);
             }
         }
+
+
+        private void StartLevel()
+        {
+            levelTimer.Start(); // Timer will start at beginning of level
+        }
+
+        private void EndLevel()
+        {
+            levelTimer.Stop(); // Timer stops at the end
+            TimeSpan elapsedTime = levelTimer.Elapsed;
+
+
+            string elapsedTimeString = String.Format("{0:00}:{1:00}:{2:00}", elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds);
+            Console.WriteLine($"Level completed in: {elapsedTimeString}");
+        }
+
+
+        private void Display()
+        {
+            player.PlayerInput(map, enemies);
+
+        }
+
+
+
+
     }
+
 }

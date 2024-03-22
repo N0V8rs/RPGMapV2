@@ -1,42 +1,54 @@
-﻿namespace RPGMap
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace RPGMap
 {
-    public class HPManager
+    internal class HPManager
     {
-        private int maxHP;
-        private int currentHP;
+        // variables | encapsulation
+        private int maximumHealth;
+        private int currentHealth;
 
-        public HPManager(int SetHP)
+        public HPManager(int maxHealth)
         {
-            maxHP = SetHP;
-            currentHP = SetHP;
-        }
-        public int ReturnsCurrentHP()
-        {
-            return currentHP;
+            maximumHealth = maxHealth;
+            currentHealth = maxHealth;
         }
 
-        public int ReturnsMaxHP()
+        // Getters
+        public int GetCurrentHealth()
         {
-            return maxHP;
+            return currentHealth;
         }
 
+        public int GetMaximumHealth()
+        {
+            return maximumHealth;
+        }
+
+        // Modify Health
         public void Damage(int amount)
         {
-            currentHP -= amount;
-            if (currentHP < 0)
-                currentHP = 0;
+            currentHealth -= amount;
+            if (currentHealth < 0)
+                currentHealth = 0;
         }
 
         public void Heal(int amount)
         {
-            currentHP += amount;
-            if (currentHP > maxHP)
-                currentHP = maxHP;
+            currentHealth += amount;
+            if (currentHealth > maximumHealth)
+                currentHealth = maximumHealth;
         }
 
+        // Check Health
         public bool IsDead()
         {
-            return currentHP <= 0;
+            return currentHealth <= 0;
         }
     }
 }

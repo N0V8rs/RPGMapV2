@@ -8,10 +8,10 @@ using System.Xml.Linq;
 
 namespace FirstPlayable
 {
-    internal class BossEnemy : EnemyManager
+    internal class CommonEnemy : EnemyManager
     {
 
-        public BossEnemy(int maxHealth, int damage, int startX, int startY, string name, char[,] mapLayout) : base(maxHealth, damage, startX, startY, name, mapLayout)
+        public CommonEnemy(int maxHealth, int damage, int startX, int startY, string name, char[,] mapLayout) : base(maxHealth, damage, startX, startY, name, mapLayout)
         {
             healthSystem = new HPManager(maxHealth);
             enemyDamage = damage;
@@ -20,7 +20,7 @@ namespace FirstPlayable
             currentTile = mapLayout[startY, startX];
             enemyAlive = true;
             Name = name;
-            icon = 'B';
+            icon = 'E';
         }
 
         public override void Draw()
@@ -28,11 +28,12 @@ namespace FirstPlayable
             if (enemyAlive == true)
             {
                 Console.SetCursorPosition(positionX, positionY);
-                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write(icon);
                 Console.ResetColor();
             }
         }
+
 
 
         public override void DrawMovement(int playerX, int playerY, int mapWidth, int mapHeight, char[,] mapLayout, Player player, List<EnemyManager> enemies)
@@ -51,10 +52,19 @@ namespace FirstPlayable
 
 
 
+
                 int rollResult = randomRoll.Next(1, 5);
                 while ((enemyMovementX == playerX && enemyMovementY == playerY) ||
-                       (enemyMovementX == newEnemyPositionX && enemyMovementY == newEnemyPositionY) ||
-                       mapLayout[enemyMovementY, enemyMovementX] == '#')
+       (enemyMovementX == newEnemyPositionX && enemyMovementY == newEnemyPositionY) ||
+       mapLayout[enemyMovementY, enemyMovementX] == '#' ||
+       mapLayout[enemyMovementY, enemyMovementX] == '^' ||
+       mapLayout[enemyMovementY, enemyMovementX] == '@' ||
+       mapLayout[enemyMovementY, enemyMovementX] == 'H' ||
+       mapLayout[enemyMovementY, enemyMovementX] == 'P' ||
+       mapLayout[enemyMovementY, enemyMovementX] == 'E' ||
+       mapLayout[enemyMovementY, enemyMovementX] == 'W' ||
+       mapLayout[enemyMovementY, enemyMovementX] == 'B')
+
                 {
 
                     // retries the role
@@ -94,6 +104,8 @@ namespace FirstPlayable
                     }
                 }
 
+
+
                 if (mapLayout[newEnemyPositionY, newEnemyPositionX] != '#')
                 {
 
@@ -108,7 +120,6 @@ namespace FirstPlayable
 
                     currentTile = mapLayout[newEnemyPositionY, newEnemyPositionX];
                 }
-
 
 
                 if (enemyMovementX == playerX && enemyMovementY == playerY)
@@ -134,8 +145,6 @@ namespace FirstPlayable
                 // Redraw the old position
                 Console.SetCursorPosition(positionX, positionY);
                 Console.Write('-');
-
-
 
                 // Update the enemy's position
                 positionY = enemyMovementY;

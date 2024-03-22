@@ -1,105 +1,79 @@
-﻿using FirstPlayable;
+﻿using RPGMap;
 using System;
 using System.Collections.Generic;
-using System.Runtime;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace RPGMap
+namespace FirstPlayable
 {
     internal class HUD
     {
-        private int mapHeight;
-        private int timeBeforeNextAttack;
+        private Player player;
+        private Map map;
 
-        public HUD(int mapHeight)
+        public HUD(Player player, Map map)
         {
-            this.mapHeight = mapHeight;
-            this.timeBeforeNextAttack = 0;
-        }
-        public void UpdateTimeBeforeNextAttack(int time)
-        {
-            timeBeforeNextAttack = time;
+            this.player = player;
+            this.map = map;
         }
 
-        public void DisplayHUD(Player player, List<Enemy> commonEnemies, Enemy boss, Enemy bomb)
+        public void UpdateHUD()
         {
-            Console.SetCursorPosition(0, mapHeight + 1);
-            Console.WriteLine($"Player HP: {player.HPManager.ReturnsCurrentHP()}/{player.HPManager.ReturnsMaxHP()} | Player Damage: {GameSettings.PlayerDamage} | Collected Diamond: {player.currentDiamond}");
+            string currentEnemyInfo = player.currentEnemy != null ? $"{player.currentEnemy.Name} | HP Remaining: ({player.currentEnemy.healthSystem.GetCurrentHealth()}/{player.currentEnemy.healthSystem.GetMaximumHealth()})" : "None";
+            Console.SetCursorPosition(0, map.mapHeight + 1);
+            Console.WriteLine($"Player Health: {player.healthSystem.GetCurrentHealth()}/{player.healthSystem.GetMaximumHealth()} | Collected Diamonds: {player.currentDiamonds} | Attacking: {currentEnemyInfo}");
+            RedrawLiveLog();
+        }
 
-            foreach (var enemy in commonEnemies)
+        public void UpdateLegend()
+        {
+            Console.SetCursorPosition(0, map.mapHeight + 2);
+            Console.WriteLine($"\nPlayer Damage Level: {player.playerDamage}");
+        }
+
+        public void DisplayLiveLog(List<string> liveLog)
+        {
+            Console.SetCursorPosition(0, map.mapHeight + 7);
+
+            Console.WriteLine("Live Log:");
+
+            int logLimit = Math.Min(3, liveLog.Count); // Limits log to 3 most recent messages
+            int startIndex = liveLog.Count - logLimit;
+
+            for (int i = liveLog.Count - 1; i >= startIndex; i--)
             {
-                if (enemy.enemyAlive)
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.WriteLine(liveLog[i]);
+            }
+
+
+            Console.ResetColor();
+        }
+
+        public void RedrawLiveLog()
+        {
+            int startLine = map.mapHeight + 7;
+            List<string> liveLog = player.GetLiveLog();
+            int startIndex = Math.Max(0, liveLog.Count - 3);
+
+            for (int i = 2; i >= 0; i--)
+            {
+                Console.SetCursorPosition(0, startLine + i);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+
+            for (int i = 2; i >= 0; i--)
+            {
+                int index = startIndex + (2 - i);
+                if (index >= 0 && index < liveLog.Count)
                 {
-                    Console.WriteLine($"Enemy HP: {enemy.HPManager.ReturnsCurrentHP()}/{enemy.HPManager.ReturnsMaxHP()} | Enemy Damage: {GameSettings.EnemyDamage}");
+                    string message = liveLog[index];
+                    Console.SetCursorPosition(0, startLine + i);
+                    Console.WriteLine(message);
                 }
             }
-
-            if (bomb.enemyAlive)
-            {
-                Console.WriteLine($"Sniper HP: {bomb.HPManager.ReturnsCurrentHP()}/{bomb.HPManager.ReturnsMaxHP()} | Sniper Damage: {GameSettings.EnemyDamage} | Time before the attack: {timeBeforeNextAttack}|2");
-            }
-
-            if (boss.enemyAlive)
-            {
-                Console.WriteLine($"Boss HP: {boss.HPManager.ReturnsCurrentHP()}/{boss.HPManager.ReturnsMaxHP()} | Boss Damage: {GameSettings.EnemyDamage}");
-            }
         }
-
-        public void DisplayLegend()
-        {
-            Console.SetCursorPosition(0, mapHeight + 6);
-            Console.Write("Player = ");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("!");
-            Console.ResetColor();
-            Console.WriteLine();
-
-            Console.Write("EnemyRandom = ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("E ");
-            Console.ResetColor();
-            Console.Write("| ");
-            Console.Write("Sniper Enemy = ");
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.Write("W ");
-            Console.ResetColor();
-            Console.Write("| ");
-            Console.Write("Boss = ");
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write("B");
-            Console.ResetColor();
-            Console.WriteLine();
-
-            Console.Write("Walls = ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("# ");
-            Console.ResetColor();
-            Console.Write("| ");
-            Console.Write("Floor = ");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("- ");
-            Console.ResetColor();
-            Console.Write("| ");
-            Console.Write("Exit = ");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("X ");
-            Console.ResetColor();
-            Console.Write("| ");
-            Console.Write("Spikes = ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("^ ");
-            Console.ResetColor();
-            Console.Write("dealing one damage to the Player\n");
-
-            Console.Write("Power UPs: ");
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write("P ");
-            Console.ResetColor();
-            Console.Write("= Increase Player Damage | ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("H ");
-            Console.ResetColor();
-            Console.WriteLine("= Full Health");
-        }
-
     }
 }

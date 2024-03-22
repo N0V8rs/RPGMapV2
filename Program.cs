@@ -1,4 +1,6 @@
-﻿namespace RPGMap
+﻿using FirstPlayable;
+
+namespace RPGMap
 {
     internal class Program : GameManager
     {

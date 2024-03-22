@@ -6,23 +6,30 @@ using System.Threading.Tasks;
 
 namespace RPGMap
 {
-    public class GameSettings
+    public class Settings
     {
-        public static int PlayerInitialHealth { get; set; } = 100; // player has 100 HP
-        public static int PlayerDamage { get; set; } = 10; // player deals 10 damage
+        // Player settings
+        public int PlayerInitialHealth { get; set; } = 10;
+        public int PlayerInitialDamage { get; set; } = 10;
+        public int PlayerInitialLevel { get; set; } = 1;
+        public string MapFileName { get; set; } = "NorthWoods.txt";
 
-        public static int EnemyInitialHealth { get; set; } = 50; // enemy has 50 HP
-        public static int EnemyDamage { get; set; } = 5; // enemy deals 5 damage
 
-        public static int BossInitialHealth { get; set; } = 200; // boss has 200 HP
-        public static int BossDamage { get; set; } = 20; // boss deals 20 damage
 
-        public static int bombDamage { get; set; } = 20; // bomb deals 20 damage
-        public static int bombInitialHealth { get; set; } = 1; // bomb has 1 HP
+        // Common settings
 
-        public static int PowerUp { get; set; } = 10; // PowerUp adds 10 to the player's damage
-        public static int Diamond { get; set; } = 1; // Diamond adds 1 to the player's score
+        public int CommonEnemyInitialHealth { get; set; } = 3;
+        public int CommonEnemyInitialDamage { get; set; } = 1;
 
-        public static int HealthPack { get; set; } = 50; // HealthPack heals 50 HP
+
+
+        // Boss settings
+        public int BossInitialHealth { get; set; } = 12;
+        public int BossInitialDamage { get; set; } = 2;
+
+
+        // Sniper settings
+        public int SniperInitialHealth { get; set; } = 1;
+        public int SniperInitialDamage { get; set; } = 2;
     }
 }

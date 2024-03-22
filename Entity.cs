@@ -1,19 +1,28 @@
-using RPGMap;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class Entity
+namespace RPGMap
 {
-    public HPManager HPManager { get; set; }
-    public int PositionX { get; set; }
-    public int PositionY { get; set; }
-    public bool IsAlive { get; set; }
-    public int Damage { get; set; }
-
-    public Entity(int maxHealth, int startX, int startY, int damage)
+    public abstract class Entity
     {
-        HPManager = new HPManager(maxHealth);
-        PositionX = startX;
-        PositionY = startY;
-        Damage = damage;
-        IsAlive = true;
+
+        public int entityDamage { get; set; }
+        public int positionX { get; set; }
+        public int positionY { get; set; }
+        public bool IsAlive { get; set; }
+
+        public Entity(int maxHealth, int health, int damage, int startX, int startY)
+        {
+
+            entityDamage = damage;
+            positionX = startX;
+            positionY = startY;
+            IsAlive = true;
+        }
+
+
     }
 }
