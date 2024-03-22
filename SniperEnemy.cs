@@ -79,21 +79,36 @@ namespace FirstPlayable
                     return;
                 }
 
-
-                if (playerX < positionX && mapLayout[positionY, positionX - 1] != '#' && positionX - 1 != playerX)
+                if (playerX < positionX && mapLayout[positionY, positionX - 1] != '#' && positionX - 1 != playerX &&
+    mapLayout[positionY, positionX - 1] != '^' && mapLayout[positionY, positionX - 1] != '@' &&
+    mapLayout[positionY, positionX - 1] != 'H' && mapLayout[positionY, positionX - 1] != 'P' &&
+    mapLayout[positionY, positionX - 1] != 'E' && mapLayout[positionY, positionX - 1] != 'W' &&
+    mapLayout[positionY, positionX - 1] != 'B')
                 {
                     enemyMovementX--;
                 }
-                else if (playerX > positionX && mapLayout[positionY, positionX + 1] != '#' && positionX + 1 != playerX)
+                else if (playerX > positionX && mapLayout[positionY, positionX + 1] != '#' && positionX + 1 != playerX &&
+                         mapLayout[positionY, positionX + 1] != '^' && mapLayout[positionY, positionX + 1] != '@' &&
+                         mapLayout[positionY, positionX + 1] != 'H' && mapLayout[positionY, positionX + 1] != 'P' &&
+                         mapLayout[positionY, positionX + 1] != 'E' && mapLayout[positionY, positionX + 1] != 'W' &&
+                         mapLayout[positionY, positionX + 1] != 'B')
                 {
                     enemyMovementX++;
                 }
 
-                if (playerY < positionY && mapLayout[positionY - 1, positionX] != '#' && positionY - 1 != playerY)
+                if (playerY < positionY && mapLayout[positionY - 1, positionX] != '#' && positionY - 1 != playerY &&
+                    mapLayout[positionY - 1, positionX] != '^' && mapLayout[positionY - 1, positionX] != '@' &&
+                    mapLayout[positionY - 1, positionX] != 'H' && mapLayout[positionY - 1, positionX] != 'P' &&
+                    mapLayout[positionY - 1, positionX] != 'E' && mapLayout[positionY - 1, positionX] != 'W' &&
+                    mapLayout[positionY - 1, positionX] != 'B')
                 {
                     enemyMovementY--;
                 }
-                else if (playerY > positionY && mapLayout[positionY + 1, positionX] != '#' && positionY + 1 != playerY)
+                else if (playerY > positionY && mapLayout[positionY + 1, positionX] != '#' && positionY + 1 != playerY &&
+                         mapLayout[positionY + 1, positionX] != '^' && mapLayout[positionY + 1, positionX] != '@' &&
+                         mapLayout[positionY + 1, positionX] != 'H' && mapLayout[positionY + 1, positionX] != 'P' &&
+                         mapLayout[positionY + 1, positionX] != 'E' && mapLayout[positionY + 1, positionX] != 'W' &&
+                         mapLayout[positionY + 1, positionX] != 'B')
                 {
                     enemyMovementY++;
                 }

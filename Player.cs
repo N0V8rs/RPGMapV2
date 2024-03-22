@@ -184,7 +184,7 @@ namespace RPGMap
 
                 if (map.layout[movementY, movementX] == '^')
                 {
-
+                    //currentTile = '^';
                     healthSystem.Damage(1);
                     UpdateLiveLog("-1 Health");
                     if (healthSystem.IsDead())
@@ -193,22 +193,18 @@ namespace RPGMap
                     }
                     else
                     {
+                        // Draw the current tile at the player's previous position
+                        Console.SetCursorPosition(positionX, positionY);
+                        Console.Write(currentTile);
+                        //Console.BackgroundColor = ConsoleColor.Gray;
 
-
-                        Console.SetCursorPosition(movementX, movementY);
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write('^');
-
-
+                        // Update the current tile
                         currentTile = map.layout[movementY, movementX];
 
                         // Move the player
                         positionY = movementY;
                         positionX = movementX;
                         moved = true;
-
-
-                        Draw();
                     }
                     return;
 
@@ -320,15 +316,16 @@ namespace RPGMap
 
         public void Draw()
         {
+            // Draw the current tile at the player's previous position
+            Console.SetCursorPosition(positionX, positionY);
+            Console.Write(currentTile);
+
+            // Draw the player at the new position
             Console.SetCursorPosition(positionX, positionY);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("!");
             Console.ResetColor();
         }
-
-
-
-
 
         public void UpdateLiveLog(string message)
         {

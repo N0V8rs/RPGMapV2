@@ -53,8 +53,15 @@ namespace FirstPlayable
 
                 int rollResult = randomRoll.Next(1, 5);
                 while ((enemyMovementX == playerX && enemyMovementY == playerY) ||
-                       (enemyMovementX == newEnemyPositionX && enemyMovementY == newEnemyPositionY) ||
-                       mapLayout[enemyMovementY, enemyMovementX] == '#')
+        (enemyMovementX == newEnemyPositionX && enemyMovementY == newEnemyPositionY) ||
+        mapLayout[enemyMovementY, enemyMovementX] == '#' ||
+        mapLayout[enemyMovementY, enemyMovementX] == '^' ||
+        mapLayout[enemyMovementY, enemyMovementX] == '@' ||
+        mapLayout[enemyMovementY, enemyMovementX] == 'H' ||
+        mapLayout[enemyMovementY, enemyMovementX] == 'P' ||
+        mapLayout[enemyMovementY, enemyMovementX] == 'E' ||
+        mapLayout[enemyMovementY, enemyMovementX] == 'W' ||
+        mapLayout[enemyMovementY, enemyMovementX] == 'B')
                 {
 
                     // retries the role
