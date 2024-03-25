@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGMap
 {
-    internal class HPManager
+    public class HPManager
     {
         // variables | encapsulation
         private int maximumHealth;

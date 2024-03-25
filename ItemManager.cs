@@ -4,33 +4,27 @@ using System.Collections.Generic;
 
 namespace RPGMap
 {
-    internal class ItemManager
+    public class ItemManager
     {
         private Player player;
+        private Dictionary<string, Item> items;
 
         public ItemManager(Player player)
         {
             this.player = player;
+            items = new Dictionary<string, Item>
+        {
+            { "HealthPotion", new HealthPotion() },
+            { "DamageBoost", new DamageBoost() },
+            { "Diamonds", new Diamonds() }
+        };
         }
 
-        public void PickupItem(string item)
+        public void PickupItem(string itemName)
         {
-            switch (item)
+            if (items.TryGetValue(itemName, out Item item))
             {
-                case "HealthPotion":
-                    player.healthSystem.Heal(1);
-                    player.UpdateLiveLog("Gained +1 health");
-                    break;
-
-                case "DamageBoost":
-                    player.playerDamage += 1;
-                    player.UpdateLiveLog("Player Damage increased +1");
-                    break;
-
-                case "Diamonds":
-                    player.currentDiamonds += 1;
-                    player.UpdateLiveLog("Picked up a Diamond");
-                    break;
+                item.Use(player);
             }
         }
     }

@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace FirstPlayable
 {
-    internal class SniperEnemy : EnemyManager
+    public class SniperEnemy : EnemyManager
     {
 
         public SniperEnemy(int maxHealth, int damage, int startX, int startY, string name, char[,] mapLayout) : base(maxHealth, damage, startX, startY, name, mapLayout)

@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace FirstPlayable
 {
-    internal class BossEnemy : EnemyManager
+    public class BossEnemy : EnemyManager
     {
 
         public BossEnemy(int maxHealth, int damage, int startX, int startY, string name, char[,] mapLayout) : base(maxHealth, damage, startX, startY, name, mapLayout)

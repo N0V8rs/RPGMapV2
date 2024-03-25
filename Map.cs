@@ -8,7 +8,7 @@ using RPGMap;
 
 namespace FirstPlayable
 {
-    internal class Map
+    public class Map
     {
         // variables | encapsulation
 
@@ -23,7 +23,7 @@ namespace FirstPlayable
         public int initialEnemyPositionX { get; set; }
         public int initialEnemyPositionY { get; set; }
 
-        private List<EnemyManager> enemies;
+        public List<EnemyManager> enemies;
         private Settings settings = new Settings();
 
         public Map(string mapFileName, List<EnemyManager> enemies)

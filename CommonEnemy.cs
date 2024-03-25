@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace FirstPlayable
 {
-    internal class CommonEnemy : EnemyManager
+    public class CommonEnemy : EnemyManager
     {
 
         public CommonEnemy(int maxHealth, int damage, int startX, int startY, string name, char[,] mapLayout) : base(maxHealth, damage, startX, startY, name, mapLayout)

@@ -10,7 +10,7 @@ using static RPGMap.Entity;
 
 namespace RPGMap
 {
-    internal class Player
+    public class Player
     {
         // variables | encapsulation
 

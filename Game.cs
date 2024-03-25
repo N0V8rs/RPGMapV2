@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace RPGMap
 {
 
-    internal class GameManager
+    public class GameManager
     {
 
         private Stopwatch levelTimer = new Stopwatch();
@@ -106,25 +106,16 @@ namespace RPGMap
             // player wins
             if (player.youWin)
             {
-                Console.ForegroundColor = ConsoleColor.Black;
                 Console.WriteLine("You win!");
-                Console.WriteLine($"\nYou collected: {player.currentDiamonds}");
-                Console.WriteLine("Try to get more if you haven't got them all");
-                Console.WriteLine("-------------------------------------------");
-                Console.WriteLine("-------------------------------------------");
-                EndLevel();
-                Console.WriteLine("-------------------------------------------");
-                Console.WriteLine("-------------------------------------------");
+                Console.WriteLine($"\nYou collected: {player.currentDiamonds} Diamond!");
+                Console.WriteLine("There are more diamonds to find in the world");
                 Console.ReadKey(true);
             }
             // players dead
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                int centerX = (Console.WindowWidth - "You died...".Length) / 2;
-                Console.SetCursorPosition(centerX, Console.CursorTop);
                 Console.WriteLine("You died...");
-
+                Console.WriteLine("Try Again!");
                 Console.ReadKey(true);
             }
         }

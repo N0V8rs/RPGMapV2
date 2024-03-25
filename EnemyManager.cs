@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGMap
 {
-    internal abstract class EnemyManager
+    public abstract class EnemyManager
     {
         // variables | encapsulation
 
