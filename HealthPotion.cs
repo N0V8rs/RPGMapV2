@@ -12,8 +12,8 @@ namespace RPGMap
 
         public override void Use(Player player)
         {
-            player.healthSystem.Heal(1);
-            player.UpdateLiveLog("Gained +1 health");
+            player.healthSystem.Heal(10);
+            player.UpdateLiveLog("Gained +10 health");
         }
     }
 }

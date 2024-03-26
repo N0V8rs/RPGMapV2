@@ -195,8 +195,8 @@ namespace RPGMap
                     {
                         // Draw the current tile at the player's previous position
                         Console.SetCursorPosition(positionX, positionY);
+                        Console.ResetColor();
                         Console.Write(currentTile);
-                        //Console.BackgroundColor = ConsoleColor.Gray;
 
                         // Update the current tile
                         currentTile = map.layout[movementY, movementX];
@@ -207,7 +207,6 @@ namespace RPGMap
                         moved = true;
                     }
                     return;
-
                 }
 
                 if (map.layout[movementY, movementX] == 'X')
@@ -262,9 +261,6 @@ namespace RPGMap
                     moved = true;
 
                     return;
-
-
-
                 }
 
                 if (map.layout[movementY, movementX] == 'P')
@@ -285,9 +281,6 @@ namespace RPGMap
                     moved = true;
 
                     return;
-
-
-
                 }
 
                 if (map.layout[movementY, movementX] == 'E')

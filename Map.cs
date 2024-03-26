@@ -11,7 +11,6 @@ namespace FirstPlayable
     public class Map
     {
         // variables | encapsulation
-
         private string path;
         private string[] floor;
         public char[,] layout;
@@ -33,7 +32,6 @@ namespace FirstPlayable
             floor = File.ReadAllLines(path);
             CreateMap();
         }
-
 
         // creates map
         private void CreateMap()
@@ -105,6 +103,7 @@ namespace FirstPlayable
                                 break;
                             case '-':
                                 Console.ForegroundColor = ConsoleColor.Gray;
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
                                 break;
                             case '@':
                                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -138,7 +137,6 @@ namespace FirstPlayable
                                 break;
                         }
 
-
                         if (tile == '=' && !player.levelComplete)
                         {
                             player.positionX = l;
@@ -166,18 +164,14 @@ namespace FirstPlayable
                             sniper.positionY = k;
                             layout[k, l] = '-';
                         }
-
-
                         Console.Write(tile);
+                        Console.ResetColor();
                     }
                     Console.WriteLine();
                     mapDrawn = true;
                 }
-
-
             }
             player.Draw();
-
 
             foreach (var enemies in enemies)
             {
@@ -185,10 +179,6 @@ namespace FirstPlayable
             }
 
             Console.SetCursorPosition(0, 0);
-
-
         }
-
-
     }
 }
