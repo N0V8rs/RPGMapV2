@@ -114,6 +114,7 @@ namespace RPGMap
             {
                 Console.WriteLine("You died...");
                 Console.WriteLine("Try Again!");
+                Console.BackgroundColor = ConsoleColor.Red;
                 Console.ReadKey(true);
             }
         }

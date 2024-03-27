@@ -18,18 +18,16 @@ namespace RPGMap
 
         // Common settings
 
-        public int CommonEnemyInitialHealth { get; set; } = 3;
+        public int CommonEnemyInitialHealth { get; set; } = 1;
         public int CommonEnemyInitialDamage { get; set; } = 1;
 
-
-
         // Boss settings
-        public int BossInitialHealth { get; set; } = 12;
+        public int BossInitialHealth { get; set; } = 25;
         public int BossInitialDamage { get; set; } = 2;
 
 
         // Sniper settings
-        public int SniperInitialHealth { get; set; } = 1;
-        public int SniperInitialDamage { get; set; } = 2;
+        public int SniperInitialHealth { get; set; } = 3;
+        public int SniperInitialDamage { get; set; } = 1;
     }
 }

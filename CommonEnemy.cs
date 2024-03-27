@@ -45,57 +45,35 @@ namespace FirstPlayable
             Random randomRoll = new Random();
 
             // checks if enemy is alive so it doesn't bug out when it is actually killed
-            if (enemyAlive == true)
+            if (enemyAlive)
             {
                 int rollResult = randomRoll.Next(1, 5);
-                while ((enemyMovementX == playerX && enemyMovementY == playerY) ||
-       (enemyMovementX == newEnemyPositionX && enemyMovementY == newEnemyPositionY) ||
-       mapLayout[enemyMovementY, enemyMovementX] == '#' ||
-       mapLayout[enemyMovementY, enemyMovementX] == '^' ||
-       mapLayout[enemyMovementY, enemyMovementX] == '@' ||
-       mapLayout[enemyMovementY, enemyMovementX] == 'H' ||
-       mapLayout[enemyMovementY, enemyMovementX] == 'P' ||
-       mapLayout[enemyMovementY, enemyMovementX] == 'E' ||
-       mapLayout[enemyMovementY, enemyMovementX] == 'W' ||
-       mapLayout[enemyMovementY, enemyMovementX] == 'B')
 
+                // Calculate the new position based on the roll result
+                switch (rollResult)
                 {
+                    case 1:
+                        enemyMovementY = Math.Min(positionY + 1, mapHeight - 1);
+                        break;
+                    case 2:
+                        enemyMovementY = Math.Max(positionY - 1, 0);
+                        break;
+                    case 3:
+                        enemyMovementX = Math.Max(positionX - 1, 0);
+                        break;
+                    case 4:
+                        enemyMovementX = Math.Min(positionX + 1, mapWidth - 1);
+                        break;
+                }
 
-                    // retries the role
-                    rollResult = randomRoll.Next(1, 5);
-
-                    if (rollResult == 1)
-                    {
-                        enemyMovementY = positionY + 1;
-                        if (enemyMovementY >= mapHeight)
-                        {
-                            enemyMovementY = mapHeight - 1;
-                        }
-                    }
-                    else if (rollResult == 2)
-                    {
-                        enemyMovementY = positionY - 1;
-                        if (enemyMovementY <= 0)
-                        {
-                            enemyMovementY = 0;
-                        }
-                    }
-                    else if (rollResult == 3)
-                    {
-                        enemyMovementX = positionX - 1;
-                        if (enemyMovementX <= 0)
-                        {
-                            enemyMovementX = 0;
-                        }
-                    }
-                    else // rollResult == 4
-                    {
-                        enemyMovementX = positionX + 1;
-                        if (enemyMovementX >= mapWidth)
-                        {
-                            enemyMovementX = mapWidth - 1;
-                        }
-                    }
+                char nextTile = mapLayout[enemyMovementY, enemyMovementX];
+                if (nextTile == '#' || nextTile == '@' || nextTile == 'H' || nextTile == '!')
+                {
+                    return;
+                }
+                if (enemyMovementX == playerX && enemyMovementY == playerY)
+                {
+                    return;
                 }
 
 
