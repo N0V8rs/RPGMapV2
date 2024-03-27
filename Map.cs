@@ -107,18 +107,22 @@ namespace FirstPlayable
                                 break;
                             case '@':
                                 Console.ForegroundColor = ConsoleColor.Cyan;
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
                                 break;
                             case '^':
                                 Console.ForegroundColor = ConsoleColor.Red;
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
                                 break;
                             case '!':
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 break;
                             case 'E':
                                 Console.ForegroundColor = ConsoleColor.Red;
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
                                 break;
                             case 'B':
                                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
                                 break;
                             case '#':
                                 Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -140,7 +144,7 @@ namespace FirstPlayable
                         if (tile == '=' && !player.levelComplete)
                         {
                             player.positionX = l;
-                            player.positionY = k - 1;
+                            player.positionY = k + 1;
                             player.levelComplete = true;
                             layout[k, l] = '-';
                         }
@@ -171,13 +175,27 @@ namespace FirstPlayable
                     mapDrawn = true;
                 }
             }
-            player.Draw();
+            //player.Draw();
 
             foreach (var enemies in enemies)
             {
                 enemies.Draw();
             }
 
+            for (int i = 0; i < mapHeight; i++)
+            {
+                for (int j = 0; j < mapWidth; j++)
+                {
+                    if (layout[i, j] == '^')
+                    {
+                        Console.SetCursorPosition(j, i);
+                        Console.ForegroundColor = ConsoleColor.Red; // Set the color of the '^' tile to red
+                        Console.Write('^');
+                        Console.ResetColor();
+                    }
+                }
+            }
+            player.Draw();
             Console.SetCursorPosition(0, 0);
         }
     }

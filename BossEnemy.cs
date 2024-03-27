@@ -61,7 +61,9 @@ namespace FirstPlayable
         mapLayout[enemyMovementY, enemyMovementX] == 'P' ||
         mapLayout[enemyMovementY, enemyMovementX] == 'E' ||
         mapLayout[enemyMovementY, enemyMovementX] == 'W' ||
-        mapLayout[enemyMovementY, enemyMovementX] == 'B')
+        mapLayout[enemyMovementY, enemyMovementX] == 'B' ||
+         mapLayout[enemyMovementY, enemyMovementX] == 'X') 
+
                 {
 
                     // retries the role

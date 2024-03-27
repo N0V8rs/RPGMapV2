@@ -154,13 +154,6 @@ namespace RPGMap
                             enemy.enemyAlive = false;
                             UpdateLiveLog($"You Killed The {enemy.Name}");
 
-                            if (enemy is SniperEnemy)
-                            {
-                                healthSystem.Heal(1);
-                                UpdateLiveLog("enemy dropped health");
-                                UpdateLiveLog("+1 Health Gained");
-                            }
-
                         }
                         else if (enemy is BossEnemy) // Check if the enemy is a Boss
                         {
@@ -171,9 +164,6 @@ namespace RPGMap
                             {
                                 gameOver = true;
                             }
-
-
-
                         }
 
                         return;
@@ -181,7 +171,6 @@ namespace RPGMap
                 }
 
                 // Spikes
-
                 if (map.layout[movementY, movementX] == '^')
                 {
                     //currentTile = '^';
@@ -197,6 +186,7 @@ namespace RPGMap
                         Console.SetCursorPosition(positionX, positionY);
                         Console.ResetColor();
                         Console.Write(currentTile);
+                        Console.ResetColor();
 
                         // Update the current tile
                         currentTile = map.layout[movementY, movementX];
@@ -215,18 +205,13 @@ namespace RPGMap
                     gameOver = true;
                 }
 
-
-
                 // collectable Diamonds
                 if (map.layout[movementY, movementX] == '@')
                 {
-
                     map.layout[movementY, movementX] = '-';
                     Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
                     itemManager.PickupItem("Diamonds");
-
-
-
 
                     Console.SetCursorPosition(positionX, positionY);
                     Console.BackgroundColor = ConsoleColor.DarkGray;
@@ -239,7 +224,6 @@ namespace RPGMap
                     moved = true;
 
                     return;
-
                 }
 
                 if (map.layout[movementY, movementX] == 'H')
@@ -250,8 +234,6 @@ namespace RPGMap
                     itemManager.PickupItem("HealthPotion");
 
                     Console.SetCursorPosition(positionX, positionY);
-
-
 
                     Console.BackgroundColor = ConsoleColor.DarkGray;
                     Console.Write(currentTile);
@@ -270,8 +252,6 @@ namespace RPGMap
                     Console.ForegroundColor = ConsoleColor.Gray;
                     itemManager.PickupItem("DamageBoost");
                     Console.SetCursorPosition(positionX, positionY);
-
-
 
                     Console.BackgroundColor = ConsoleColor.DarkGray;
                     Console.Write(currentTile);
@@ -311,11 +291,13 @@ namespace RPGMap
         {
             // Draw the current tile at the player's previous position
             Console.SetCursorPosition(positionX, positionY);
+            Console.ResetColor();
             Console.Write(currentTile);
 
             // Draw the player at the new position
             Console.SetCursorPosition(positionX, positionY);
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Blue;
+            //Console.BackgroundColor = ConsoleColor.DarkGray;
             Console.Write("!");
             Console.ResetColor();
         }

@@ -34,8 +34,6 @@ namespace FirstPlayable
             }
         }
 
-
-
         public override void DrawMovement(int playerX, int playerY, int mapWidth, int mapHeight, char[,] mapLayout, Player player, List<EnemyManager> enemies)
         {
             int enemyMovementX = positionX;
@@ -49,10 +47,6 @@ namespace FirstPlayable
             // checks if enemy is alive so it doesn't bug out when it is actually killed
             if (enemyAlive == true)
             {
-
-
-
-
                 int rollResult = randomRoll.Next(1, 5);
                 while ((enemyMovementX == playerX && enemyMovementY == playerY) ||
        (enemyMovementX == newEnemyPositionX && enemyMovementY == newEnemyPositionY) ||

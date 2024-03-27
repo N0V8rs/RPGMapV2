@@ -97,8 +97,6 @@ namespace RPGMap
                 Update();
 
                 Draw();
-
-
             }
 
             Console.Clear();

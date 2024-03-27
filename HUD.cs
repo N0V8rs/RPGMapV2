@@ -42,9 +42,9 @@ namespace FirstPlayable
 
         public void DisplayLiveLog(List<string> liveLog)
         {
-            Console.SetCursorPosition(0, map.mapHeight + 7);
+            Console.SetCursorPosition(0, map.mapHeight + 5);
             Console.WriteLine("Live Log:");
-            for (int i = liveLog.Count - 1; i >= 0 && i >= liveLog.Count - 3; i--)
+            for (int i = liveLog.Count - 1; i >= 0 && i >= liveLog.Count - 2; i--)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(0, Console.CursorTop);
@@ -55,7 +55,7 @@ namespace FirstPlayable
 
         public void RedrawLiveLog()
         {
-            int startLine = map.mapHeight + 7;
+            int startLine = map.mapHeight + 5;
             List<string> liveLog = player.GetLiveLog();
             for (int i = 2; i >= 0; i--)
             {
